@@ -1,0 +1,164 @@
+.recipe {
+  cursor: pointer;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.recipe-img {
+  width: 250px;
+  height: 250px;
+  background-size: cover;
+  align-self: center;
+  background-repeat: no-repeat;
+}
+
+.recipe-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.likes-and-dislikes button:last-child {
+  margin-left: 5px;
+}
+
+.add-to-favorite {
+  background: #ffc107;
+  color: #fff;
+  margin-left: 5px;
+}
+
+.time-and-portions {
+  display: inline-block
+}
+
+.recipe-description {
+  text-align: justify;
+  line-height: 2rem;
+  font-size: 1.1rem;
+}
+
+.recipe-portions {
+  margin-right: 1rem;
+}
+
+.recipe-portions, .recipe-time {
+  display: inline-block;
+}
+
+.recipe-portions i, .recipe-time i {
+  background-color: var(--success-color);
+  color: #fff;
+  padding: 0.4rem;
+  border-radius: 50%;
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.recipe .number {
+  font-weight: 700;
+}
+
+.recipe .buttons {
+  display: flex;
+}
+
+@media(max-width: 800px) {
+  .recipes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .recipe {
+    grid-template-columns: 1fr;
+    max-width: 350px;
+  }
+
+  .recipe-img {
+    justify-self: center;
+  }
+
+  .recipe .head h2, .recipe .author {
+    text-align: center;
+  }
+
+  .recipe div {
+    text-align: center;
+  }
+
+  .recipe .buttons {
+    justify-content: center;
+  }
+
+  .recipe-description {
+    padding: 0 1rem;
+    line-height: 25px;
+    font-size: 1rem;
+    text-align: center;
+  }
+}
+
+@media(max-width: 500px) {
+  .recipe .buttons {
+    flex-direction: column
+  }
+
+  .recipe .likes-and-dislikes {
+    display: flex;
+    margin-bottom: 5px;
+    justify-content: space-between;
+  }
+
+  .recipe .likes-and-dislikes button {
+    width: 48%;
+  }
+
+  .recipe .add-to-favorite {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+@media(max-width: 300px) {
+  .recipe-img {
+    width: 150px;
+    height: 150px;
+  }
+
+  .recipe-portions {
+    margin-right: 0;
+  }
+
+  .recipe div:not(:last-child) {
+    text-align: left;
+  }
+
+  .recipe-portions {
+    margin-bottom: 10px;
+  }
+
+  .recipe-description {
+    text-align: center;
+    padding: 0;
+  }
+
+  .recipe-info h2 {
+    font-size: 1.2rem;
+  }
+
+  .servings, .time {
+    font-size: 0.8rem;
+  }
+
+  .recipe-portions, .recipe-time {
+    display: block;
+  }
+
+  .recipe-portions i, .recipe-time i {
+    margin-right: 10px;
+  }
+}

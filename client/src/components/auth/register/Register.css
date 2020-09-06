@@ -1,0 +1,9 @@
+.register-form .form-group {
+  margin: 1.8rem 0;
+}
+
+@media(max-width: 500px) {
+  .register-form .form-group {
+    margin: 0.8rem 0;
+  }
+}

@@ -1,0 +1,69 @@
+.landing {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: url('../../img/landing.png') no-repeat center center/cover;
+}
+
+.landing-heading {
+  padding: 1rem;
+  color: #fbe6d4;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.landing-inner {
+  width: 100%;
+  height: 100%;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.landing-button {
+  font-size: 2rem;
+  background-color: var(--dark-color);
+  color: #fbe6d4;
+}
+
+.dark-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+@media(max-width: 500px) {
+  .landing-heading {
+    font-size: 2.5rem;
+  }
+
+  .landing-button {
+    font-size: 1.25rem;
+  }
+}
+
+@media(max-width: 300px) {
+  .landing-heading {
+    font-size: 2rem;
+    margin: 0;
+  }
+
+  .landing-button {
+    font-size: 1rem;
+  }
+}
+
+@media(max-height: 590px) {
+  .navbar {
+    padding: 0.3rem;
+  }
+
+  .landing-heading {
+    margin-top: 6.5rem;
+    margin-bottom: 0;
+  }
+}

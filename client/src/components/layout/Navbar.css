@@ -1,0 +1,70 @@
+.navbar {
+  padding: 0.6rem;
+  background-color: var(--light-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  opacity: 0.9;
+  border-bottom: 4px solid var(--success-color);
+}
+
+.app {
+  color: var(--success-color);
+}
+
+.navbar > a {
+  font-size: 1.8rem;
+}
+
+.navbar > a span:not(:last-child) {
+  margin-left: 0.5rem;
+}
+
+.navbar > a span:nth-of-type(1) {
+  color: var(--dark-color);
+}
+
+.navbar ul {
+  display: flex;
+}
+
+.navbar ul li {
+  margin-left: 0.5rem;
+}
+
+@media(max-width: 700px) {
+  .navbar {
+    flex-direction: column;
+  }
+
+  .navbar a {
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media(max-width: 300px) {
+  .navbar ul {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .navbar ul li {
+    display: block;
+    margin: 0;
+  }
+  
+  .navbar ul li a {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media(max-height: 590px) {
+  .navbar {
+    padding: 0.3rem;
+  }
+}
