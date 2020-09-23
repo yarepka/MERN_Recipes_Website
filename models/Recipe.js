@@ -31,13 +31,11 @@ const RecipeSchema = new Schema({
 
   prepTime: {
     type: String,
-    maxlength: 5,
     required: true
   },
 
   cookTime: {
     type: String,
-    maxlength: 5,
     required: true
   },
 
@@ -46,7 +44,7 @@ const RecipeSchema = new Schema({
     required: true
   },
 
-  reqdyIn: {
+  readyIn: {
     type: String,
     required: false
   },
@@ -92,9 +90,21 @@ const RecipeSchema = new Schema({
     }
   ],
 
+  imagePath: {
+    type: String
+  },
+
   date: {
     type: Date,
     default: Date.now
+  }
+}, {
+  toJSON: {
+    transform(doc, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.__v;
+    }
   }
 });
 

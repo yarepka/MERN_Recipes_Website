@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { body } = require('express-validator');
+const fileUpload = require('express-fileupload');
 
 const User = require('../../models/User');
 const validateRequest = require('../../middleware/validateRequest');
@@ -20,6 +21,8 @@ router.post('/',
   validateRequest,
   async (req, res) => {
     try {
+      const { email, name, password } = req.body;
+
       // Check if user with specified email already exist
       let user = await User.findOne({ email: email });
 
@@ -28,10 +31,22 @@ router.post('/',
         return res.status(400).json({ errors: [{ msg: 'User already exist' }] });
       }
 
+      // upload the file
+      let imagePath;
+      if (!req.files) {
+        imagePath = config.get('defaultUserImage');
+      } else {
+        const file = req.files.file;
+        console.log('file: ', file);
+
+        imagePath = `user-${email + new Date().getMilliseconds()}`;
+        await file.mv(`${__dirname}/client/public/uploads/${imagePath}`);
+      }
+
       user = new User({
         name: name,
         email: email,
-        imagePath: config.get('defaultUserImage')
+        imagePath: imagePath
       });
 
       // Encrypt password
