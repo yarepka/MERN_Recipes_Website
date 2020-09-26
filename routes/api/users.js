@@ -68,7 +68,7 @@ router.post('/',
         { expiresIn: config.get('jwtExpirationTime') },
         (err, token) => {
           if (err) throw err;
-          res.json({ token: token });
+          res.status(201).json({ token: token });
         }
       );
 

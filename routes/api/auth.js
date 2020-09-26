@@ -25,7 +25,7 @@ router.get('/',
     }
   });
 
-// @route   POST api/auth
+// @route   POST api/auth/
 // @desc    Login & get token
 // @access  Public (Public - don't need token to acces route)
 router.post('/',
@@ -41,9 +41,9 @@ router.post('/',
       // Check if user exists
       const user = await User.findOne({ email: email });
 
-      // Use does not exists
+      // User does not exists
       if (!user) {
-        return res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] });
+        return res.status(404).json({ errors: [{ msg: 'Invalid Credentials' }] });
       }
 
       // Check passwords match
@@ -68,7 +68,7 @@ router.post('/',
         { expiresIn: config.get('jwtExpirationTime') },
         (err, token) => {
           if (err) throw err;
-          return res.json({ token: token });
+          return res.status(200).json({ token: token });
         }
       );
     } catch (err) {
