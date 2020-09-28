@@ -6,16 +6,19 @@ import Register from '../auth/register/Register';
 import RecipeForm from '../recipes/recipeForm/RecipeForm';
 import Recipes from '../recipes/recipes/Recipes';
 import Recipe from '../recipe/Recipe';
+import Alert from '../layout/Alert';
+import PrivateRoute from '../routing/PrivateRoute';
 
 const Routes = () => {
   return (
     <section className="container">
+      <Alert />
       <Switch>
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
-        <Route exact path="/create-recipe" component={RecipeForm} />
         <Route exact path="/recipes" component={Recipes} />
         <Route exact path="/recipe" component={Recipe} />
+        <PrivateRoute exact path="/create-recipe" component={RecipeForm} />
       </Switch>
     </section>
   )

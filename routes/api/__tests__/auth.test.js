@@ -94,7 +94,7 @@ it('user trying to log in specifying correct credentials', async () => {
     .set('x-auth-token', xAuthToken)
     .send({
       email: 'test@test.com',
-      password: 'password'
+      password: 'Roman123456'
     });
 
   expect(response.status).toEqual(200);

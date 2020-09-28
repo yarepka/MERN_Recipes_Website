@@ -1,25 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import { connect } from 'react-redux';
 
 import Routes from './components/routing/Routes';
 import Navbar from './components/layout/Navbar';
 import Landing from './components/landing/Landing';
-import store from './store';
+import { loadUser } from './redux/actions/auth';
+import setAuthToken from './utils/setAuthToken';
 
-const App = () => {
+const App = ({ loadUser }) => {
   console.log('[App]: rendering');
+
+  useEffect(() => {
+    setAuthToken(localStorage.token);
+    loadUser();
+  }, []);
+
   return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <Navbar />
-        <Switch>
-          <Route exact path="/" component={Landing} />
-          <Route component={Routes} />
-        </Switch>
-      </BrowserRouter>
-    </Provider>
+    <BrowserRouter>
+      <Navbar />
+      <Switch>
+        <Route exact path="/" component={Landing} />
+        <Route component={Routes} />
+      </Switch>
+    </BrowserRouter>
   );
 }
 
-export default App;
+export default connect(null, { loadUser })(App);

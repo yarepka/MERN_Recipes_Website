@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
 const config = require('config');
+const mongoose = require('mongoose');
 
 const auth = require('../../middleware/auth');
 const validateRequest = require('../../middleware/validateRequest');
@@ -29,7 +30,9 @@ router.post('/',
     const { description, title, ingredients, directions, prepTime, cookTime, numberOfServings, readyIn } = req.body;
 
     try {
+      const recipeId = mongoose.Types.ObjectId();
       const newRecipe = {
+        _id: recipeId,
         title,
         description,
         ingredients: ingredients.split('\n'),
@@ -41,7 +44,7 @@ router.post('/',
         likes: [],
         dislikes: [],
         comments: [],
-        imagePath: '',
+        imagePath: config.get('defaultRecipeImage'),
         user: req.user.id
       };
 
@@ -53,8 +56,11 @@ router.post('/',
         const file = req.files.file;
         console.log('file: ', file);
 
-        imagePath = `recipe-${+ new Date().getMilliseconds()}`;
-        await file.mv(`${__dirname}/client/public/uploads/${imagePath}`);
+        imagePath = `recipes/recipe-${+ title.split(' ')[0] + recipeId.toHexString() + new Date().getMilliseconds()}`;
+
+        console.log('process.mainModule.filename: ', process.mainModule.filename);
+
+        await file.mv(path.join(path.resolve(process.mainModule.filename, '../'), 'client', 'public', 'uploads', imagePath));
       }
 
       newRecipe.imagePath = imagePath;

@@ -69,7 +69,7 @@ it('unauthorized user trying to create new recipe', async () => {
   expect(recipeResponse.status).toEqual(401);
 });
 
-it('logged in user trying to create new recipe, all properties specified', async () => {
+it('authorized user trying to create new recipe, all properties specified', async () => {
   // Create user
   const xAuthToken = await global.signin();
 
@@ -78,7 +78,7 @@ it('logged in user trying to create new recipe, all properties specified', async
   expect(recipe).not.toEqual(undefined);
 });
 
-it('logged in user trying to create new recipe without specifing any properties', async () => {
+it('authorized user trying to create new recipe without specifing any properties', async () => {
   const xAuthToken = await global.signin();
   const recipeResponse = await request(app)
     .post('/api/recipes/')
@@ -90,7 +90,7 @@ it('logged in user trying to create new recipe without specifing any properties'
   expect(recipeResponse.body.errors.length).toEqual(8);
 });
 
-it('logged in user creates 5 recipies and then trying to fetch them', async () => {
+it('authorized user creates 5 recipies and then trying to fetch them', async () => {
   // Create user
   const xAuthToken = await global.signin();
 
@@ -110,7 +110,35 @@ it('logged in user creates 5 recipies and then trying to fetch them', async () =
   expect(recipies.length).toEqual(5);
 });
 
-it('logged in/unauthorized user trying to get recipe by id', async () => {
+it('authorized user trying to create recipe specifying \'numberOfServings\' property with Not A Number', async () => {
+  const xAuthToken = await global.signin();
+  // Create recipe
+  const newRecipe = {
+    _id: mongoose.Types.ObjectId().toHexString(),
+    title: 'Fry Potatoes',
+    description: 'Tasy fry potatoes with butter and milk',
+    ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
+    directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
+    prepTime: '20 minutes',
+    cookTime: '60 minutes',
+    readyIn: '80 minutes',
+    numberOfServings: 'I AM A STRING :)',
+    likes: [],
+    dislikes: [],
+    comments: [],
+    user: mongoose.Types.ObjectId().toHexString()
+  };
+
+  const recipeResponse = await request(app)
+    .post('/api/recipes/')
+    .set('Content-Type', 'application/json')
+    .set('x-auth-token', xAuthToken)
+    .send(newRecipe);
+
+  expect(recipeResponse.status).toEqual(400);
+});
+
+it('authorized/unauthorized user trying to get recipe by id', async () => {
   // Create user
   const xAuthToken = await global.signin();
 

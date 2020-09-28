@@ -1,0 +1,34 @@
+.alert {
+  padding: 0.8rem;
+  margin: 1rem 0;
+  opacity: 0.9rem;
+  background: var(--light-color);
+  color: var(--dark-color);
+}
+
+.alert .title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.alert-success {
+  background: var(--success-color);
+  color: #fff;
+}
+
+.alert-danger {
+  background: var(--danger-color);
+  color: #fff;
+}
+
+@media(max-width: 500px) {
+  .alert .title {
+    font-size: 1.1rem;
+  }
+}
+
+@media(max-width: 300px) {
+  .alert .title {
+    font-size: 0.9rem;
+  }
+}

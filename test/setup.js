@@ -9,7 +9,7 @@ mongoose.set('useCreateIndex', true);
 global.signin = async (mail) => {
   const name = 'Roman';
   const email = mail || 'test@test.com';
-  const password = 'password';
+  const password = 'Roman123456';
 
   // sign up
   const response = await request(app)

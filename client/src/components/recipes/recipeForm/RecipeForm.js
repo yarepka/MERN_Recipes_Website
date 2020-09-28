@@ -4,6 +4,9 @@ import './RecipeForm.css';
 
 const RecipeForm = () => {
   console.log('[RecipeForm]: rendering');
+
+  
+
   return <Fragment>
     <h1 class="text-large text-success text-center">Share Your Recipe</h1>
     <form class="create-recipe-form">
@@ -46,7 +49,7 @@ const RecipeForm = () => {
 
           <button class="btn btn-success">Save</button>
 
-          <a class="btn text-center">Cancel</a>
+          <a class="btn text-center" href="#">Cancel</a>
         </div>
 
         <div class="inputs-right">

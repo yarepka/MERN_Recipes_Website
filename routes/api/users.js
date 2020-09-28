@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const { body } = require('express-validator');
 const fileUpload = require('express-fileupload');
+const path = require('path');
 
 const User = require('../../models/User');
 const validateRequest = require('../../middleware/validateRequest');
@@ -16,7 +17,7 @@ router.post('/',
   [
     body('name', 'Name is required').not().isEmpty(),
     body('email', 'Please include a valid email').isEmail(),
-    body('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 })
+    body('password', 'Invalid password. Check password rules specified below').matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/)
   ],
   validateRequest,
   async (req, res) => {
@@ -32,15 +33,17 @@ router.post('/',
       }
 
       // upload the file
-      let imagePath;
       if (!req.files) {
         imagePath = config.get('defaultUserImage');
       } else {
         const file = req.files.file;
         console.log('file: ', file);
 
-        imagePath = `user-${email + new Date().getMilliseconds()}`;
-        await file.mv(`${__dirname}/client/public/uploads/${imagePath}`);
+        imagePath = `users/user-${email + new Date().getMilliseconds()}${path.extname(req.files.file.name)}`;
+
+        console.log('process.mainModule.filename: ', process.mainModule.filename);
+
+        await file.mv(path.join(path.resolve(process.mainModule.filename, '../'), 'client', 'public', 'uploads', imagePath));
       }
 
       user = new User({
