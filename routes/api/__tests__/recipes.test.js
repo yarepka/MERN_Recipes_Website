@@ -20,9 +20,8 @@ async function createRecipe(xAuthToken) {
     description: 'Tasy fry potatoes with butter and milk',
     ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
     directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
-    prepTime: '20 minutes',
-    cookTime: '60 minutes',
-    readyIn: '80 minutes',
+    prepTime: 20,
+    cookTime: 60,
     numberOfServings: 2,
     likes: [],
     dislikes: [],
@@ -51,9 +50,8 @@ it('unauthorized user trying to create new recipe', async () => {
     description: 'Tasy fry potatoes with butter and milk',
     ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
     directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
-    prepTime: '20 minutes',
-    cookTime: '60 minutes',
-    readyIn: '80 minutes',
+    prepTime: 20,
+    cookTime: 60,
     numberOfServings: 2,
     likes: [],
     dislikes: [],
@@ -87,7 +85,7 @@ it('authorized user trying to create new recipe without specifing any properties
     .send({});
 
   expect(recipeResponse.status).toEqual(400);
-  expect(recipeResponse.body.errors.length).toEqual(8);
+  expect(recipeResponse.body.errors.length).toEqual(11);
 });
 
 it('authorized user creates 5 recipies and then trying to fetch them', async () => {
@@ -119,9 +117,8 @@ it('authorized user trying to create recipe specifying \'numberOfServings\' prop
     description: 'Tasy fry potatoes with butter and milk',
     ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
     directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
-    prepTime: '20 minutes',
-    cookTime: '60 minutes',
-    readyIn: '80 minutes',
+    prepTime: 20,
+    cookTime: 60,
     numberOfServings: 'I AM A STRING :)',
     likes: [],
     dislikes: [],
@@ -137,6 +134,156 @@ it('authorized user trying to create recipe specifying \'numberOfServings\' prop
 
   expect(recipeResponse.status).toEqual(400);
 });
+
+it('authorized user trying to create recipe by specifying prepTime as a negative value', async () => {
+  const xAuthToken = await global.signin();
+  // Create recipe
+  const newRecipe = {
+    _id: mongoose.Types.ObjectId().toHexString(),
+    title: 'Fry Potatoes',
+    description: 'Tasy fry potatoes with butter and milk',
+    ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
+    directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
+    prepTime: -1,
+    cookTime: 60,
+    numberOfServings: 2,
+    likes: [],
+    dislikes: [],
+    comments: [],
+    user: mongoose.Types.ObjectId().toHexString()
+  };
+
+  const recipeResponse = await request(app)
+    .post('/api/recipes/')
+    .set('Content-Type', 'application/json')
+    .set('x-auth-token', xAuthToken)
+    .send(newRecipe);
+
+  expect(recipeResponse.status).toEqual(400);
+});
+
+it('authorized user trying to create recipe by specifying prepTime as a value which is min 0', async () => {
+  const xAuthToken = await global.signin();
+  // Create recipe
+  const newRecipe = {
+    _id: mongoose.Types.ObjectId().toHexString(),
+    title: 'Fry Potatoes',
+    description: 'Tasy fry potatoes with butter and milk',
+    ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
+    directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
+    prepTime: 0,
+    cookTime: 60,
+    numberOfServings: 2,
+    likes: [],
+    dislikes: [],
+    comments: [],
+    user: mongoose.Types.ObjectId().toHexString()
+  };
+
+  const recipeResponse = await request(app)
+    .post('/api/recipes/')
+    .set('Content-Type', 'application/json')
+    .set('x-auth-token', xAuthToken)
+    .send(newRecipe);
+
+  expect(recipeResponse.status).toEqual(201);
+});
+
+it('authorized user trying to create recipe by specifying cookTime as a 0 value', async () => {
+  const xAuthToken = await global.signin();
+  // Create recipe
+  const newRecipe = {
+    _id: mongoose.Types.ObjectId().toHexString(),
+    title: 'Fry Potatoes',
+    description: 'Tasy fry potatoes with butter and milk',
+    ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
+    directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
+    prepTime: 5,
+    cookTime: 0,
+    numberOfServings: 2,
+    likes: [],
+    dislikes: [],
+    comments: [],
+    user: mongoose.Types.ObjectId().toHexString()
+  };
+
+  const recipeResponse = await request(app)
+    .post('/api/recipes/')
+    .set('Content-Type', 'application/json')
+    .set('x-auth-token', xAuthToken)
+    .send(newRecipe);
+
+  expect(recipeResponse.status).toEqual(400);
+});
+
+it('authorized user trying to create recipe by specifying cookTime as a value which is greater than 0', async () => {
+  const xAuthToken = await global.signin();
+  // Create recipe
+  const newRecipe = {
+    _id: mongoose.Types.ObjectId().toHexString(),
+    title: 'Fry Potatoes',
+    description: 'Tasy fry potatoes with butter and milk',
+    ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
+    directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
+    prepTime: 0,
+    cookTime: 5,
+    numberOfServings: 2,
+    likes: [],
+    dislikes: [],
+    comments: [],
+    user: mongoose.Types.ObjectId().toHexString()
+  };
+
+  const recipeResponse = await request(app)
+    .post('/api/recipes/')
+    .set('Content-Type', 'application/json')
+    .set('x-auth-token', xAuthToken)
+    .send(newRecipe);
+
+  expect(recipeResponse.status).toEqual(201);
+});
+
+it('authorized user trying to create recipe by specifying ingredients and direction with a lot of empty string', async () => {
+  const xAuthToken = await global.signin();
+
+  const ingString = '    Apples\n \n \n Sugar\n\n';
+  const expectedIngArr = ['Apples', 'Sugar'];
+  const dirString = '    Cook\n    \n \n    \n Add Sugar';
+  const expectedDirArr = ['Cook', 'Add Sugar'];
+
+  // Create recipe
+  const newRecipe = {
+    title: 'Fry Potatoes',
+    description: 'Tasy fry potatoes with butter and milk',
+    ingredients: ingString,
+    directions: dirString,
+    prepTime: 20,
+    cookTime: 60,
+    numberOfServings: 2,
+    likes: [],
+    dislikes: [],
+    comments: [],
+    user: mongoose.Types.ObjectId().toHexString()
+  };
+
+  let recipeResponse = await request(app)
+    .post('/api/recipes/')
+    .set('Content-Type', 'application/json')
+    .set('x-auth-token', xAuthToken)
+    .send(newRecipe);
+
+  expect(recipeResponse.status).toEqual(201);
+
+  // Get recipe by id
+  recipeResponse = await request(app)
+    .get(`/api/recipes/${recipeResponse.body.id}`)
+    .set('Content-Type', 'application/json')
+    .send({});
+
+  expect(recipeResponse.body.ingredients).toEqual(expectedIngArr);
+  expect(recipeResponse.body.directions).toEqual(expectedDirArr);
+});
+
 
 it('authorized/unauthorized user trying to get recipe by id', async () => {
   // Create user

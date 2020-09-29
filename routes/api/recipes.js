@@ -3,7 +3,10 @@ const router = express.Router();
 const { body } = require('express-validator');
 const config = require('config');
 const mongoose = require('mongoose');
+const path = require('path');
 
+
+const clearString = require('../../utils/clearString');
 const auth = require('../../middleware/auth');
 const validateRequest = require('../../middleware/validateRequest');
 const Recipe = require('../../models/Recipe');
@@ -20,32 +23,39 @@ router.post('/',
       body('ingredients', 'Ingredients is required').not().isEmpty(),
       body('directions', 'Directions is required').not().isEmpty(),
       body('prepTime', 'Preparation time is required').not().isEmpty(),
+      body('prepTime', 'Preparation time must be number greater or equal to 0').isInt({ min: 0 }),
       body('cookTime', 'Cook time is required').not().isEmpty(),
+      body('cookTime', 'Cook time must be number greater than 0').isInt({ gt: 0 }),
       body('numberOfServings', 'Number of servings is required').not().isEmpty(),
       body('numberOfServings', 'Number of servings must be numberic value').isNumeric(),
+      body('numberOfServings', 'Number of serving must be greater than 0').isInt({ gt: 0 }),
       body('readyIn', 'Ready In is required')
     ],
     validateRequest],
   async (req, res) => {
-    const { description, title, ingredients, directions, prepTime, cookTime, numberOfServings, readyIn } = req.body;
+    const { description, title, ingredients, directions, prepTime, cookTime, numberOfServings } = req.body;
 
     try {
+      const user = await User.findById(req.user.id);
       const recipeId = mongoose.Types.ObjectId();
+
       const newRecipe = {
         _id: recipeId,
         title,
         description,
-        ingredients: ingredients.split('\n'),
-        directions: directions.split('\n'),
+        ingredients: clearString(ingredients.split('\n')),
+        directions: clearString(directions.split('\n')),
         prepTime,
         cookTime,
-        readyIn,
+        readyIn: parseInt(prepTime) + parseInt(cookTime),
         numberOfServings,
         likes: [],
         dislikes: [],
         comments: [],
         imagePath: config.get('defaultRecipeImage'),
-        user: req.user.id
+        user: req.user.id,
+        name: user.name,
+        userImagePath: user.imagePath,
       };
 
       // upload an image
@@ -56,9 +66,7 @@ router.post('/',
         const file = req.files.file;
         console.log('file: ', file);
 
-        imagePath = `recipes/recipe-${+ title.split(' ')[0] + recipeId.toHexString() + new Date().getMilliseconds()}`;
-
-        console.log('process.mainModule.filename: ', process.mainModule.filename);
+        imagePath = `recipes/recipe-${title.replace(/[^\w]/g, '') + recipeId.toHexString() + new Date().getMilliseconds()}${path.extname(req.files.file.name)}`;
 
         await file.mv(path.join(path.resolve(process.mainModule.filename, '../'), 'client', 'public', 'uploads', imagePath));
       }

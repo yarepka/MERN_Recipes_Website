@@ -12,3 +12,15 @@ export const AUTH_ERROR = 'AUTH_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
+
+// Recipes
+export const GET_RECIPES = 'GET_RECIPES';
+export const GET_RECIPE = 'GET_RECIPE';
+export const RECIPE_ERROR = 'RECIPE_ERROR';
+export const UPDATE_LIKES = 'UPDATE_LIKES';
+export const UPDATE_DISLIKES = 'UPDATE_DISLIKES';
+export const DELETE_RECIPE = 'DELETE_RECIPE';
+export const ADD_RECIPE = 'ADD_RECIPE';
+export const ADD_COMMENT = 'ADD_COMMENT';
+export const REMOVE_COMMENT = 'REMOVE_COMMENT';
+export const CLEAR_ADDED_RECIPE = 'CLEAR_ADDED_RECIPE';

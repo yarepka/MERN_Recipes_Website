@@ -1,53 +1,46 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
+import { connect } from 'react-redux';
 
 import RecipeItem from '../recipeItem/RecipeItem';
+import Spinner from '../../layout/Spinner';
+import { getRecipes } from '../../../redux/actions/recipe';
 
-import FoodOneImage from '../../../img/food/food_1.jpeg';
-import FoodTwoImage from '../../../img/food/food_2.jpeg';
-import FoodThreeImage from '../../../img/food/food_3.jpeg';
-import FoodFourImage from '../../../img/food/food_4.jpeg';
-import FoodFiveImage from '../../../img/food/food_5.jpeg';
-import FoodSixImage from '../../../img/food/food_6.jpeg';
-import FoodSevenImage from '../../../img/food/food_7.jpeg';
-
-const Recipes = () => {
+const Recipes = ({ getRecipes, recipe: { recipes, loading } }) => {
   console.log('[Recipes]: rendering');
 
-  const recipe = {
-    id: '123',
-    title: 'Title',
-    description: 'Description',
-    user: {
-      id: 'user',
-      name: 'John'
-    },
-    likes: 24,
-    dislikes: 3
-  };
+  useEffect(() => {
+    getRecipes();
+  }, [getRecipes]);
+
+  const recipeItems = recipes.map(recipe => {
+    return (
+      <RecipeItem recipe={recipe} key={recipe.id} />
+    );
+  });
+
+  console.log(recipeItems);
 
   return (
     <Fragment>
       <h1 className="text-large text-success text-center my-2">All Recipes</h1>
 
       <p className="lead text-center">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea consequatur aperiam nam eaque illo ducimus ab ut
-        excepturi ullam voluptates.
+        Share your recipes with the World!
       </p>
 
       <div className="line-small"></div>
 
-      <div className="recipes">
-        <RecipeItem recipe={recipe} image={FoodOneImage} />
-        <RecipeItem recipe={recipe} image={FoodTwoImage} />
-        <RecipeItem recipe={recipe} image={FoodThreeImage} />
-        <RecipeItem recipe={recipe} image={FoodFourImage} />
-        <RecipeItem recipe={recipe} image={FoodFiveImage} />
-        <RecipeItem recipe={recipe} image={FoodSixImage} />
-        <RecipeItem recipe={recipe} image={FoodSevenImage} />
-      </div>
-
+      {loading ? <Spinner /> : (
+        <div className="recipes">
+          {recipeItems}
+        </div>
+      )}
     </Fragment>
   );
 }
 
-export default Recipes;
+const mapStateToProps = state => ({
+  recipe: state.recipe
+});
+
+export default connect(mapStateToProps, { getRecipes })(Recipes);

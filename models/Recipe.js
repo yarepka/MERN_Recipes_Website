@@ -7,6 +7,14 @@ const RecipeSchema = new Schema({
     ref: 'User'
   },
 
+  name: {
+    type: String
+  },
+
+  userImagePath: {
+    type: String
+  },
+
   title: {
     type: String,
     required: true
@@ -30,12 +38,12 @@ const RecipeSchema = new Schema({
   },
 
   prepTime: {
-    type: String,
+    type: Number,
     required: true
   },
 
   cookTime: {
-    type: String,
+    type: Number,
     required: true
   },
 
@@ -45,7 +53,7 @@ const RecipeSchema = new Schema({
   },
 
   readyIn: {
-    type: String,
+    type: Number,
     required: false
   },
 
