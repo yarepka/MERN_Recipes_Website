@@ -18,8 +18,6 @@ const Recipes = ({ getRecipes, recipe: { recipes, loading } }) => {
     );
   });
 
-  console.log(recipeItems);
-
   return (
     <Fragment>
       <h1 className="text-large text-success text-center my-2">All Recipes</h1>

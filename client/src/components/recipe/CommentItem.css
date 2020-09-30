@@ -1,0 +1,56 @@
+.comment {
+  border: 1px solid #ccc;
+  padding: 1rem;
+}
+
+.comment:not(:last-child) {
+  margin-bottom: 2rem;
+}
+
+.comment .comment-top {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
+.comment .name-and-date {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment .comment-date {
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.comment .comment-author-date {
+  font-size: 1.25rem;
+}
+
+.comment .comment-author-image {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.comment .comment-author {
+  display: flex;
+  align-items: center;
+}
+
+.comment .comment-author span {
+  margin-left: 10px;
+}
+
+.comment .comment-content p {
+  line-height: 30px;
+}
+
+@media(max-width: 300px) {
+  .comment .comment-content p{
+    font-size: 0.8rem;
+    line-height: 1.2rem !important;
+  }
+}

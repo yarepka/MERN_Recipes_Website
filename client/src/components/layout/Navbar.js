@@ -18,7 +18,9 @@ const Navbar = ({ isAuthenticated, loading, logout }) => {
         <Link to="/create-recipe" className="btn">New</Link>
       </li>
       <li>
-        <a className="btn" onClick={logout}>Logout</a>
+        <button className="btn" onClick={e => logout()}>
+          Logout
+        </button>
       </li>
     </ul>
   );

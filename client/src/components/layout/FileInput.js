@@ -3,7 +3,7 @@ import React from 'react';
 import "./FileInput.css";
 
 const FileInput = (props) => {
-  console.log('[FileInput]: rendering, props: ', props);
+  console.log('[FileInput]: rendering');
 
   let imageLabel = (
     <label htmlFor="file-upload" className="file-upload-label">

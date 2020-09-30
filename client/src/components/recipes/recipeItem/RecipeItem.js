@@ -1,10 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
+import { addLike, addDislike } from '../../../redux/actions/recipe';
 import './RecipeItem.css';
 
-const RecipeItem = ({ recipe }) => {
+const RecipeItem = ({ recipe, addLike, addDislike }) => {
   console.log('[RecipeItem]: rendering');
-  console.log('Recipe: ', recipe);
+
   return (
     <div className="recipe">
       <div className="recipe-img" style={{ backgroundImage: "url(./uploads/" + recipe.imagePath + ")" }}></div>
@@ -31,20 +34,27 @@ const RecipeItem = ({ recipe }) => {
 
         <div className="buttons">
           <div className="likes-and-dislikes">
-            <button className="btn btn-success">
+
+            <button className="btn btn-success"
+              onClick={e => addLike(recipe.id)}
+            >
               <i className="fas fa-thumbs-up"></i> <span>{recipe.likes.length}</span>
             </button>
-            <button className="btn btn-danger">
+
+            <button className="btn btn-danger"
+              onClick={e => addDislike(recipe.id)}
+            >
               <i className="fas fa-thumbs-down"></i> <span>{recipe.dislikes.length}</span>
             </button>
           </div>
-          <button className="btn add-to-favorite">
-            <i className="fas fa-star"></i> Add to favorite
-      </button>
+
+          <Link to={`/recipes/${recipe.id}`} className="btn view">
+            <i className="fa fa-search"></i> View
+          </Link>
         </div>
       </div>
     </div>
   );
 }
 
-export default RecipeItem;
+export default connect(null, { addLike, addDislike })(RecipeItem);

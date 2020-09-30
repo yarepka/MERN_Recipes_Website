@@ -83,7 +83,6 @@ export const login = ({ email, password }) => {
     };
 
     const body = JSON.stringify({ email, password });
-    console.log('body: ', body);
     try {
       const res = await axios.post('/api/auth', body, config);
 
@@ -111,6 +110,7 @@ export const login = ({ email, password }) => {
 // Logout 
 export const logout = () => {
   return dispatch => {
+    delete axios.defaults.headers.common['x-auth-token'];
     dispatch({ type: LOGOUT });
   }
 }

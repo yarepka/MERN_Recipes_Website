@@ -7,7 +7,7 @@ import { setAlert } from '../../../redux/actions/alert';
 import { register } from '../../../redux/actions/auth';
 import FileInput from '../../layout/FileInput';
 
-const Register = ({ setAlert, register, isAuthenticated }) => {
+const Register = ({ setAlert, register, isAuthenticated, history }) => {
   console.log("[Register]: rendering");
 
   const [email, setEmail] = useState('');
@@ -17,33 +17,27 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const onNameChangeHandler = e => {
-    console.log('Name: ', e.target.value);
     setName(e.target.value);
   }
 
   const onEmailChangeHandler = e => {
-    console.log('Email: ', e.target.value);
     setEmail(e.target.value);
   }
 
   const onPasswordChangeHandler = e => {
-    console.log('Password: ', e.target.value);
     setPassword(e.target.value);
   }
 
   const onConfirmPasswordChangeHandler = e => {
-    console.log('Confirm Password: ', e.target.value);
     setConfirmPassword(e.target.value);
   }
 
   const onImageChangeHandler = useCallback(e => {
-    console.log('Image: ', e.target.files[0]);
     setImage(e.target.files[0]);
   }, [image]);
 
   const onSubmitHandler = async e => {
     e.preventDefault();
-    console.log('FORM SUBMIT');
     if (!password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/)) {
       setAlert('Invalid password', 'danger');
     } else if (password !== confirmPassword) {
@@ -59,7 +53,8 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
   }
 
   if (isAuthenticated) {
-    return <Redirect to="/" />
+    //return <Redirect to="/" />
+    history.goBack();
   }
 
   return (

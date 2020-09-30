@@ -1,0 +1,40 @@
+.add-comment-form {
+  padding: 2rem;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+.add-comment-form textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.add-comment-form button {
+  text-transform: uppercase;
+  width: 150px;
+}
+
+@media(max-width: 500px) {
+  .add-comment-form button {
+    display: block;
+    width: 100%;
+  }
+
+  .add-comment-form {
+    padding: 1rem;
+  }
+
+  .add-comment-form textarea {
+    font-size: 1.2rem;
+  }
+}
+
+@media(max-width: 300px) {
+  .add-comment-form textarea {
+    font-size: 0.8rem;
+    padding: 0.5rem;
+  }
+}

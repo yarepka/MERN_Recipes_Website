@@ -37,11 +37,8 @@ router.post('/',
         imagePath = config.get('defaultUserImage');
       } else {
         const file = req.files.file;
-        console.log('file: ', file);
 
         imagePath = `users/user-${email + new Date().getMilliseconds()}${path.extname(req.files.file.name)}`;
-
-        console.log('process.mainModule.filename: ', process.mainModule.filename);
 
         await file.mv(path.join(path.resolve(process.mainModule.filename, '../'), 'client', 'public', 'uploads', imagePath));
       }

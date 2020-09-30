@@ -8,7 +8,6 @@ import './RecipeForm.css';
 
 const RecipeForm = (props) => {
   console.log('[RecipeForm]: rendering');
-
   const [formData, setFormData] = useState({
     description: '',
     title: '',
@@ -28,8 +27,11 @@ const RecipeForm = (props) => {
     [e.target.name]: e.target.value
   });
 
+  const onCancelHandler = () => {
+    props.history.goBack();
+  }
+
   const onImageChangeHandler = useCallback(e => {
-    console.log('Image: ', e.target.files[0]);
     setImage(e.target.files[0]);
   }, [image]);
 
@@ -39,7 +41,6 @@ const RecipeForm = (props) => {
     //props.history.push('/recipes');
   }
 
-  console.log('NEW_RECIPE_ADDED: ', props.newRecipeAdded);
   if (props.newRecipeAdded) {
     props.clearAddedRecipe();
     props.history.push('/recipes');
@@ -78,7 +79,7 @@ const RecipeForm = (props) => {
 
           <button className="btn btn-success">Save</button>
 
-          <a className="btn text-center" href="#">Cancel</a>
+          <button type="button" className="btn text-center" onClick={e => onCancelHandler()}>Cancel</button>
         </div>
 
         <div className="inputs-right">

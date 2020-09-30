@@ -17,7 +17,7 @@ const Routes = () => {
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/recipes" component={Recipes} />
-        <Route exact path="/recipe" component={Recipe} />
+        <Route exact path="/recipes/:id" component={Recipe} />
         <PrivateRoute exact path="/create-recipe" component={RecipeForm} />
       </Switch>
     </section>

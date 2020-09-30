@@ -5,7 +5,7 @@ import { login } from '../../../redux/actions/auth';
 
 import './Login.css';
 
-const Login = ({ login, isAuthenticated }) => {
+const Login = ({ login, isAuthenticated, history }) => {
   console.log("[Login]: rendering");
 
   const [email, setEmail] = useState('');
@@ -24,7 +24,10 @@ const Login = ({ login, isAuthenticated }) => {
     login({ email, password });
   }
 
-  if (isAuthenticated) return <Redirect to='/' />
+  if (isAuthenticated) {
+    // return <Redirect to='/' />
+    history.goBack();
+  }
 
   return (
     <div>

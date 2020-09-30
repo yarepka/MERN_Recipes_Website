@@ -64,7 +64,6 @@ router.post('/',
         imagePath = config.get('defaultRecipeImage');
       } else {
         const file = req.files.file;
-        console.log('file: ', file);
 
         imagePath = `recipes/recipe-${title.replace(/[^\w]/g, '') + recipeId.toHexString() + new Date().getMilliseconds()}${path.extname(req.files.file.name)}`;
 

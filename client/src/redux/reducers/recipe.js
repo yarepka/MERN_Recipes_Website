@@ -1,8 +1,7 @@
 import {
   GET_RECIPES,
   RECIPE_ERROR,
-  UPDATE_LIKES,
-  UPDATE_DISLIKES,
+  UPDATE_RATING,
   DELETE_RECIPE,
   ADD_RECIPE,
   GET_RECIPE,
@@ -34,6 +33,33 @@ export default (state = initialState, action) => {
         ...state,
         recipes: payload,
         loading: false,
+      };
+    case UPDATE_RATING:
+      return {
+        ...state,
+        recipes: state.recipes
+          .map(recipe => recipe.id === payload.recipeId ? {
+            ...recipe,
+            likes: payload.likes,
+            dislikes: payload.dislikes
+          } : recipe
+          ),
+        recipe: state.recipe !== null && state.recipe.id === payload.recipeId ? { ...state.recipe, likes: payload.likes, dislikes: payload.dislikes } : state.recipe
+      };
+    case GET_RECIPE:
+      return {
+        ...state,
+        recipe: payload,
+        loading: false
+      };
+    case ADD_COMMENT:
+      return {
+        ...state,
+        recipe: {
+          ...state.recipe,
+          comments: payload
+        },
+        loading: false
       };
     case RECIPE_ERROR:
       return {

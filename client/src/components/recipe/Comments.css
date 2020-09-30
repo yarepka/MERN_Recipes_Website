@@ -1,0 +1,11 @@
+.comments {
+  border: 1px solid #ccc;
+  border-top: none;
+  padding: 2rem;
+}
+
+@media(max-width: 300px) {
+  .comments {
+    padding: 2rem 1rem;
+  }
+}
