@@ -1,12 +1,19 @@
-import React, { Fragment, useState, useCallback } from 'react';
-import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom';
+import React, { Fragment, useState, useEffect, useCallback } from 'react';
+import { connect } from 'react-redux';
 
 import { addRecipe, clearAddedRecipe } from '../../../redux/actions/recipe';
+import { removeAllAlerts } from '../../../redux/actions/alert';
 import FileInput from '../../layout/FileInput';
 import './RecipeForm.css';
 
-const RecipeForm = (props) => {
+const RecipeForm = ({
+  alerts,
+  newRecipeAdded,
+  history,
+  addRecipe,
+  clearAddedRecipe,
+  removeAllAlerts,
+}) => {
   console.log('[RecipeForm]: rendering');
   const [formData, setFormData] = useState({
     description: '',
@@ -20,97 +27,158 @@ const RecipeForm = (props) => {
 
   const [image, setImage] = useState('');
 
-  const { description, title, ingredients, directions, prepTime, cookTime, numberOfServings } = formData;
+  const {
+    description,
+    title,
+    ingredients,
+    directions,
+    prepTime,
+    cookTime,
+    numberOfServings,
+  } = formData;
 
-  const onChangeHandler = e => setFormData({
-    ...formData,
-    [e.target.name]: e.target.value
-  });
+  const onChangeHandler = (e) =>
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
 
   const onCancelHandler = () => {
-    props.history.goBack();
-  }
+    history.goBack();
+  };
 
-  const onImageChangeHandler = useCallback(e => {
-    setImage(e.target.files[0]);
-  }, [image]);
+  const onImageChangeHandler = useCallback(
+    (e) => {
+      setImage(e.target.files[0]);
+    },
+    [image]
+  );
 
-  const onSubmitHandler = e => {
+  const onSubmitHandler = (e) => {
     e.preventDefault();
-    props.addRecipe({ ...formData, image });
-    //props.history.push('/recipes');
-  }
+    addRecipe({ ...formData, image });
+  };
 
-  if (props.newRecipeAdded) {
-    props.clearAddedRecipe();
-    props.history.push('/recipes');
-  }
+  useEffect(() => {
+    if (alerts.length > 0) removeAllAlerts();
+  }, []);
 
-  return <Fragment>
-    <h1 className="text-large text-success text-center">Share Your Recipe</h1>
-    <form className="create-recipe-form" onSubmit={onSubmitHandler}>
-      <div className="inputs">
-        <div className="inputs-left">
-          <div className="form-group">
-            <FileInput
-              image={image}
-              imageHandler={onImageChangeHandler}
-            />
-          </div>
+  useEffect(() => {
+    if (newRecipeAdded) {
+      clearAddedRecipe();
+      history.push('/recipes');
+    }
+  }, [newRecipeAdded]);
 
-          <div className="form-group form-group-flex">
-            <div>
-              <label>Prep time (min)</label>
-              <input type="number" name="prepTime" onChange={onChangeHandler} value={prepTime} />
+  return (
+    <Fragment>
+      <h1 className='text-large text-success text-center'>Share Your Recipe</h1>
+      <form className='create-recipe-form' onSubmit={onSubmitHandler}>
+        <div className='inputs'>
+          <div className='inputs-left'>
+            <div className='form-group'>
+              <FileInput image={image} imageHandler={onImageChangeHandler} />
             </div>
 
-            <div>
-              <label>Cook time (min)</label>
-              <input type="number" name="cookTime" onChange={onChangeHandler} value={cookTime} />
+            <div className='form-group form-group-flex'>
+              <div>
+                <label>Prep time (min)</label>
+                <input
+                  type='number'
+                  name='prepTime'
+                  onChange={onChangeHandler}
+                  value={prepTime}
+                />
+              </div>
+
+              <div>
+                <label>Cook time (min)</label>
+                <input
+                  type='number'
+                  name='cookTime'
+                  onChange={onChangeHandler}
+                  value={cookTime}
+                />
+              </div>
             </div>
+
+            <div className='form-group form-group-flex'>
+              <div>
+                <label>Number of Servings</label>
+                <input
+                  type='number'
+                  name='numberOfServings'
+                  onChange={onChangeHandler}
+                  value={numberOfServings}
+                />
+              </div>
+            </div>
+
+            <button className='btn btn-success'>Save</button>
+
+            <button
+              type='button'
+              className='btn text-center'
+              onClick={(e) => onCancelHandler()}
+            >
+              Cancel
+            </button>
           </div>
 
-          <div className="form-group form-group-flex">
-            <div>
-              <label>Number of Servings</label>
-              <input type="number" name="numberOfServings" onChange={onChangeHandler} value={numberOfServings} />
+          <div className='inputs-right'>
+            <div className='form-group'>
+              <label>Recipe title</label>
+              <input
+                type='text'
+                name='title'
+                onChange={onChangeHandler}
+                value={title}
+              />
+            </div>
+
+            <div className='form-group'>
+              <label>Description</label>
+              <textarea
+                rows='3'
+                name='description'
+                onChange={onChangeHandler}
+                value={description}
+              ></textarea>
+            </div>
+
+            <div className='form-group'>
+              <label>Ingredients</label>
+              <textarea
+                rows='4'
+                placeholder="Put each ingredient on it's own line"
+                name='ingredients'
+                onChange={onChangeHandler}
+                value={ingredients}
+              ></textarea>
+            </div>
+
+            <div className='form-group'>
+              <label>Directions</label>
+              <textarea
+                rows='4'
+                placeholder='Put each step on its own line'
+                name='directions'
+                onChange={onChangeHandler}
+                value={directions}
+              ></textarea>
             </div>
           </div>
-
-          <button className="btn btn-success">Save</button>
-
-          <button type="button" className="btn text-center" onClick={e => onCancelHandler()}>Cancel</button>
         </div>
+      </form>
+    </Fragment>
+  );
+};
 
-        <div className="inputs-right">
-          <div className="form-group">
-            <label>Recipe title</label>
-            <input type="text" name="title" onChange={onChangeHandler} value={title} />
-          </div>
-
-          <div className="form-group">
-            <label>Description</label>
-            <textarea rows="3" name="description" onChange={onChangeHandler} value={description}></textarea>
-          </div>
-
-          <div className="form-group">
-            <label>Ingredients</label>
-            <textarea rows="4" placeholder="Put each ingredient on it's own line" name="ingredients" onChange={onChangeHandler}
-              value={ingredients}></textarea>
-          </div>
-
-          <div className="form-group">
-            <label>Directions</label>
-            <textarea rows="4" placeholder="Put each step on its own line" name="directions" onChange={onChangeHandler} value={directions}></textarea>
-          </div>
-        </div>
-      </div>
-    </form>
-  </Fragment>
-}
-
-const mapStateToProps = state => ({
-  newRecipeAdded: state.recipe.newRecipeAdded
+const mapStateToProps = (state) => ({
+  newRecipeAdded: state.recipe.newRecipeAdded,
+  alerts: state.alert,
 });
 
-export default connect(mapStateToProps, { addRecipe, clearAddedRecipe })(RecipeForm);
+export default connect(mapStateToProps, { addRecipe, clearAddedRecipe })(
+  RecipeForm
+);

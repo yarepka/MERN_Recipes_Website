@@ -13,23 +13,38 @@ const validateRequest = require('../../middleware/validateRequest');
 // @route   POST api/users
 // @desc    Register user & get token
 // @access  Public (Public - don't need token to access route)
-router.post('/',
+router.post(
+  '/',
   [
     body('name', 'Name is required').not().isEmpty(),
     body('email', 'Please include a valid email').isEmail(),
-    body('password', 'Invalid password. Check password rules specified below').matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/)
+    body(
+      'password',
+      'Invalid password. Check password rules specified below'
+    ).matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/),
   ],
   validateRequest,
   async (req, res) => {
     try {
       const { email, name, password } = req.body;
 
+      // Check if user with sepcified name already exists
+      let user = await User.findOne({ name: name });
+
+      if (user) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'User already exist' }] });
+      }
+
       // Check if user with specified email already exist
-      let user = await User.findOne({ email: email });
+      user = await User.findOne({ email: email });
 
       if (user) {
         // Matching the same object pattern as we did above
-        return res.status(400).json({ errors: [{ msg: 'User already exist' }] });
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'User already exist' }] });
       }
 
       // upload the file
@@ -38,15 +53,25 @@ router.post('/',
       } else {
         const file = req.files.file;
 
-        imagePath = `users/user-${email + new Date().getMilliseconds()}${path.extname(req.files.file.name)}`;
+        imagePath = `users/user-${
+          email + new Date().getMilliseconds()
+        }${path.extname(req.files.file.name)}`;
 
-        await file.mv(path.join(path.resolve(process.mainModule.filename, '../'), 'client', 'public', 'uploads', imagePath));
+        await file.mv(
+          path.join(
+            path.resolve(process.mainModule.filename, '../'),
+            'client',
+            'public',
+            'uploads',
+            imagePath
+          )
+        );
       }
 
       user = new User({
         name: name,
         email: email,
-        imagePath: imagePath
+        imagePath: imagePath,
       });
 
       // Encrypt password
@@ -58,7 +83,7 @@ router.post('/',
       const payload = {
         user: {
           id: user.id,
-        }
+        },
       };
 
       // Create jwt
@@ -71,11 +96,11 @@ router.post('/',
           res.status(201).json({ token: token });
         }
       );
-
     } catch (err) {
       console.log(err);
       return res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
-  });
+  }
+);
 
 module.exports = router;

@@ -36,7 +36,7 @@
   margin-left: 0.5rem;
 }
 
-@media(max-width: 700px) {
+@media (max-width: 700px) {
   .navbar {
     flex-direction: column;
   }
@@ -46,7 +46,7 @@
   }
 }
 
-@media(max-width: 300px) {
+@media (max-width: 300px) {
   .navbar ul {
     width: 100%;
     flex-direction: column;
@@ -56,14 +56,15 @@
     display: block;
     margin: 0;
   }
-  
-  .navbar ul li a {
+
+  .navbar ul li a,
+  .navbar ul li button {
     width: 100%;
     text-align: center;
   }
 }
 
-@media(max-height: 590px) {
+@media (max-height: 590px) {
   .navbar {
     padding: 0.3rem;
   }

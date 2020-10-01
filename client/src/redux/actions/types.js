@@ -3,6 +3,7 @@
 // Alerts
 export const SET_ALERT = 'SET_ALERT';
 export const REMOVE_ALERT = 'REMOVE_ALERT';
+export const REMOVE_ALL_ALERTS = 'REMOVE_ALL_ALERTS';
 
 // Register & Log In
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
@@ -14,6 +15,7 @@ export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 
 // Recipes
+export const LOAD_PAGE = 'LOAD_PAGE';
 export const GET_RECIPES = 'GET_RECIPES';
 export const GET_RECIPE = 'GET_RECIPE';
 export const RECIPE_ERROR = 'RECIPE_ERROR';

@@ -5,7 +5,6 @@ const config = require('config');
 const mongoose = require('mongoose');
 const path = require('path');
 
-
 const clearString = require('../../utils/clearString');
 const auth = require('../../middleware/auth');
 const validateRequest = require('../../middleware/validateRequest');
@@ -15,25 +14,49 @@ const User = require('../../models/User');
 // @route  POST api/recipe
 // @desc   Create a recipe
 // @access Private(need token)
-router.post('/',
-  [auth,
+router.post(
+  '/',
+  [
+    auth,
     [
       body('description', 'Description is required').not().isEmpty(),
       body('title', 'Title is required').not().isEmpty(),
       body('ingredients', 'Ingredients is required').not().isEmpty(),
       body('directions', 'Directions is required').not().isEmpty(),
       body('prepTime', 'Preparation time is required').not().isEmpty(),
-      body('prepTime', 'Preparation time must be number greater or equal to 0').isInt({ min: 0 }),
+      body(
+        'prepTime',
+        'Preparation time must be number greater or equal to 0'
+      ).isInt({ min: 0 }),
       body('cookTime', 'Cook time is required').not().isEmpty(),
-      body('cookTime', 'Cook time must be number greater than 0').isInt({ gt: 0 }),
-      body('numberOfServings', 'Number of servings is required').not().isEmpty(),
-      body('numberOfServings', 'Number of servings must be numberic value').isNumeric(),
-      body('numberOfServings', 'Number of serving must be greater than 0').isInt({ gt: 0 }),
-      body('readyIn', 'Ready In is required')
+      body('cookTime', 'Cook time must be number greater than 0').isInt({
+        gt: 0,
+      }),
+      body('numberOfServings', 'Number of servings is required')
+        .not()
+        .isEmpty(),
+      body(
+        'numberOfServings',
+        'Number of servings must be numberic value'
+      ).isNumeric(),
+      body(
+        'numberOfServings',
+        'Number of serving must be greater than 0'
+      ).isInt({ gt: 0 }),
+      body('readyIn', 'Ready In is required'),
     ],
-    validateRequest],
+    validateRequest,
+  ],
   async (req, res) => {
-    const { description, title, ingredients, directions, prepTime, cookTime, numberOfServings } = req.body;
+    const {
+      description,
+      title,
+      ingredients,
+      directions,
+      prepTime,
+      cookTime,
+      numberOfServings,
+    } = req.body;
 
     try {
       const user = await User.findById(req.user.id);
@@ -65,9 +88,21 @@ router.post('/',
       } else {
         const file = req.files.file;
 
-        imagePath = `recipes/recipe-${title.replace(/[^\w]/g, '') + recipeId.toHexString() + new Date().getMilliseconds()}${path.extname(req.files.file.name)}`;
+        imagePath = `recipes/recipe-${
+          title.replace(/[^\w]/g, '') +
+          recipeId.toHexString() +
+          new Date().getMilliseconds()
+        }${path.extname(req.files.file.name)}`;
 
-        await file.mv(path.join(path.resolve(process.mainModule.filename, '../'), 'client', 'public', 'uploads', imagePath));
+        await file.mv(
+          path.join(
+            path.resolve(process.mainModule.filename, '../'),
+            'client',
+            'public',
+            'uploads',
+            imagePath
+          )
+        );
       }
 
       newRecipe.imagePath = imagePath;
@@ -90,6 +125,41 @@ router.get('/', async (req, res) => {
   try {
     // sorting all recipes, to get recent recipes first
     const recipes = await Recipe.find().sort({ date: -1 });
+    return res.status(200).json(recipes);
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+  }
+});
+
+// @route  GET api/recipes/loadPage?page=1&date=242134235&perPage=1
+// @desc   Get next page with recipes
+// @access Public
+router.get('/loadPage', async (req, res) => {
+  try {
+    // Get page
+    const page = parseInt(req.query.page);
+    const dateInMilliseconds = parseInt(req.query.date);
+    const recipesPerPage = req.query.perPage
+      ? parseInt(req.query.perPage)
+      : config.get('recipesPerPage');
+
+    if (!page && !dateInMilliseconds) {
+      return res.status(400).json({
+        errors: [{ msg: 'page and date query parameters must be specified' }],
+      });
+    }
+
+    const dateFromMilliseconds = new Date(dateInMilliseconds);
+
+    // Get next page recipes
+    const recipes = await Recipe.find({
+      date: { $lte: dateFromMilliseconds },
+    })
+      .sort({ date: 'desc' })
+      .skip((page - 1) * recipesPerPage)
+      .limit(recipesPerPage);
+
     return res.status(200).json(recipes);
   } catch (err) {
     console.error(err.message);
@@ -164,8 +234,13 @@ router.put('/like/:id', auth, async (req, res) => {
     }
 
     // Check if the recipe has alreay been liked by this user
-    if (recipe.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
-      return res.status(400).json({ errors: [{ msg: 'Recipe already liked' }] });
+    if (
+      recipe.likes.filter((like) => like.user.toString() === req.user.id)
+        .length > 0
+    ) {
+      return res
+        .status(400)
+        .json({ errors: [{ msg: 'Recipe already liked' }] });
     }
 
     // Check if the recipe was Disliked
@@ -184,7 +259,7 @@ router.put('/like/:id', auth, async (req, res) => {
     }
 
     // Add Like
-    // Unshift is same as push, but adds new element to the beggining 
+    // Unshift is same as push, but adds new element to the beggining
     recipe.likes.unshift({ user: req.user.id });
 
     await recipe.save();
@@ -215,7 +290,10 @@ router.put('/dislike/:id', auth, async (req, res) => {
     }
 
     // Check if the recipe has alreay been disliked by this user
-    if (recipe.dislikes.filter(like => like.user.toString() === req.user.id).length > 0) {
+    if (
+      recipe.dislikes.filter((like) => like.user.toString() === req.user.id)
+        .length > 0
+    ) {
       return res.status(400).json({ msg: 'Recipe already disliked' });
     }
 
@@ -235,7 +313,7 @@ router.put('/dislike/:id', auth, async (req, res) => {
     }
 
     // Add Like
-    // Unshift is same as push, but adds new element to the beggining 
+    // Unshift is same as push, but adds new element to the beggining
     recipe.dislikes.unshift({ user: req.user.id });
 
     await recipe.save();
@@ -255,12 +333,50 @@ router.put('/dislike/:id', auth, async (req, res) => {
 // @route   POST api/recipes/comment/:id
 // @desc    Comment on a recipe
 // @access  Private (need token)
-router.post('/comment/:id', auth, [
-  body('text', 'Text is required').not().isEmpty()
-], validateRequest, async (req, res) => {
+router.post(
+  '/comment/:id',
+  auth,
+  [body('text', 'Text is required').not().isEmpty()],
+  validateRequest,
+  async (req, res) => {
+    try {
+      const user = await User.findById(req.user.id).select('-password');
+      const recipe = await Recipe.findById(req.params.id);
+
+      // Make sure recipe exists
+      if (!recipe) {
+        return res.status(404).json({ errors: [{ msg: 'Recipe not found' }] });
+      }
+
+      const newComment = {
+        text: req.body.text,
+        name: user.name,
+        imagePath: user.imagePath,
+        user: req.user.id,
+      };
+
+      recipe.comments.unshift(newComment);
+
+      await recipe.save();
+
+      res.status(201).json(recipe.comments);
+    } catch (err) {
+      console.log(err.message);
+
+      if (err.kind === 'ObjectId') {
+        return res.status(404).json({ errors: [{ msg: 'Recipe not found' }] });
+      }
+
+      return res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    }
+  }
+);
+
+// @route   DELETE api/recipes/comment/:id/:comment_id
+// @desc    Delete comment
+// @access  Private (need token)
+router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id)
-      .select('-password');
     const recipe = await Recipe.findById(req.params.id);
 
     // Make sure recipe exists
@@ -268,18 +384,33 @@ router.post('/comment/:id', auth, [
       return res.status(404).json({ errors: [{ msg: 'Recipe not found' }] });
     }
 
-    const newComment = {
-      text: req.body.text,
-      name: user.name,
-      imagePath: user.imagePath,
-      user: req.user.id
-    };
+    // Pull out comment and it's index
+    let comment;
+    let commentIndex;
+    for (let i = 0; i < recipe.comments.length; i++) {
+      if (recipe.comments[i].id === req.params.comment_id) {
+        comment = recipe.comments[i];
+        commentIndex = i;
+        break;
+      }
+    }
 
-    recipe.comments.unshift(newComment);
+    // Make sure comment exists
+    if (!comment) {
+      return res.status(404).json({ errors: [{ msg: 'Comment not found' }] });
+    }
+
+    // Check user
+    if (comment.user.toString() !== req.user.id) {
+      return res.status(401).json({ errors: [{ msg: 'User not authorized' }] });
+    }
+
+    // Remove comment
+    recipe.comments.splice(commentIndex, 1);
 
     await recipe.save();
 
-    res.status(201).json(recipe.comments);
+    return res.status(204).json(recipe.comments);
   } catch (err) {
     console.log(err.message);
 
@@ -290,57 +421,5 @@ router.post('/comment/:id', auth, [
     return res.status(500).json({ errors: [{ msg: 'Server Error' }] });
   }
 });
-
-// @route   DELETE api/recipes/comment/:id/:comment_id
-// @desc    Delete comment
-// @access  Private (need token)
-router.delete('/comment/:id/:comment_id',
-  auth,
-  async (req, res) => {
-    try {
-      const recipe = await Recipe.findById(req.params.id);
-
-      // Make sure recipe exists
-      if (!recipe) {
-        return res.status(404).json({ errors: [{ msg: 'Recipe not found' }] });
-      }
-
-      // Pull out comment and it's index
-      let comment;
-      let commentIndex;
-      for (let i = 0; i < recipe.comments.length; i++) {
-        if (recipe.comments[i].id === req.params.comment_id) {
-          comment = recipe.comments[i];
-          commentIndex = i;
-          break;
-        }
-      }
-
-      // Make sure comment exists
-      if (!comment) {
-        return res.status(404).json({ errors: [{ msg: 'Comment not found' }] });
-      }
-
-      // Check user
-      if (comment.user.toString() !== req.user.id) {
-        return res.status(401).json({ errors: [{ msg: 'User not authorized' }] })
-      }
-
-      // Remove comment
-      recipe.comments.splice(commentIndex, 1);
-
-      await recipe.save();
-
-      return res.status(204).json(recipe.comments);
-    } catch (err) {
-      console.log(err.message);
-
-      if (err.kind === 'ObjectId') {
-        return res.status(404).json({ errors: [{ msg: 'Recipe not found' }] });
-      }
-
-      return res.status(500).json({ errors: [{ msg: 'Server Error' }] });
-    }
-  });
 
 module.exports = router;

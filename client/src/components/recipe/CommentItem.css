@@ -33,6 +33,7 @@
   border-radius: 50%;
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
 }
 
 .comment .comment-author {
@@ -48,8 +49,8 @@
   line-height: 30px;
 }
 
-@media(max-width: 300px) {
-  .comment .comment-content p{
+@media (max-width: 300px) {
+  .comment .comment-content p {
     font-size: 0.8rem;
     line-height: 1.2rem !important;
   }

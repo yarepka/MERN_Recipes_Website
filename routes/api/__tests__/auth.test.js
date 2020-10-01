@@ -2,9 +2,7 @@ const request = require('supertest');
 const app = require('../../../app');
 
 it('unauthorized user trying to get current user', async () => {
-  const response = await request(app)
-    .get('/api/auth/')
-    .send({});
+  const response = await request(app).get('/api/auth/').send({});
 
   expect(response.status).toEqual(401);
 });
@@ -19,8 +17,7 @@ it('registered user trying to log in', async () => {
 
   expect(response.status).toEqual(200);
   expect(response.body.email).toEqual('test@test.com');
-  expect(response.body.name).toEqual('Roman');
-
+  expect(response.body.name).toEqual('test@test.com');
 });
 
 it('user trying to log in without specifying email', async () => {
@@ -28,7 +25,7 @@ it('user trying to log in without specifying email', async () => {
     .post('/api/auth/')
     .set('Content-Type', 'application/json')
     .send({
-      password: 'password'
+      password: 'password',
     });
 
   expect(response.status).toEqual(400);
@@ -40,7 +37,7 @@ it('user trying to log in without specifying password', async () => {
     .post('/api/auth/')
     .set('Content-Type', 'application/json')
     .send({
-      email: 'test@test.com'
+      email: 'test@test.com',
     });
 
   expect(response.status).toEqual(400);
@@ -51,8 +48,7 @@ it('user trying to log in without specifying anyhting', async () => {
   const response = await request(app)
     .post('/api/auth/')
     .set('Content-Type', 'application/json')
-    .send({
-    });
+    .send({});
 
   expect(response.status).toEqual(400);
   expect(response.body.errors.length).toEqual(2);
@@ -64,7 +60,7 @@ it('user trying to log in with an email which was not registered yet', async () 
     .set('Content-Type', 'application/json')
     .send({
       email: 'donotexist@test.com',
-      password: 'password'
+      password: 'password',
     });
 
   expect(response.status).toEqual(404);
@@ -79,7 +75,7 @@ it('user trying to log in specifying incorrect password', async () => {
     .set('x-auth-token', xAuthToken)
     .send({
       email: 'test@test.com',
-      password: 'wrongpassword'
+      password: 'wrongpassword',
     });
 
   expect(response.status).toEqual(400);
@@ -94,10 +90,9 @@ it('user trying to log in specifying correct credentials', async () => {
     .set('x-auth-token', xAuthToken)
     .send({
       email: 'test@test.com',
-      password: 'Roman123456'
+      password: 'Roman123456',
     });
 
   expect(response.status).toEqual(200);
   expect(response.body.token).not.toEqual(undefined);
 });
-

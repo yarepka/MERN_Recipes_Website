@@ -7,15 +7,17 @@ const app = require('../app');
 mongoose.set('useCreateIndex', true);
 
 global.signin = async (mail) => {
-  const name = 'Roman';
-  const email = mail || 'test@test.com';
+  const name = mail || 'test@test.com';
+  const email = name;
   const password = 'Roman123456';
 
   // sign up
   const response = await request(app)
     .post('/api/users/')
     .send({
-      name, email, password
+      name,
+      email,
+      password,
     })
     .expect(201);
 
@@ -31,7 +33,7 @@ beforeAll(async () => {
 
   await mongoose.connect(mongoUri, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   });
 });
 
@@ -48,4 +50,4 @@ beforeEach(async () => {
 afterAll(async () => {
   await mongo.stop();
   await mongoose.connection.close();
-})
+});

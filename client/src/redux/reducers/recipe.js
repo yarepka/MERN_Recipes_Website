@@ -1,5 +1,6 @@
 import {
   GET_RECIPES,
+  LOAD_PAGE,
   RECIPE_ERROR,
   UPDATE_RATING,
   DELETE_RECIPE,
@@ -7,7 +8,7 @@ import {
   GET_RECIPE,
   ADD_COMMENT,
   REMOVE_COMMENT,
-  CLEAR_ADDED_RECIPE
+  CLEAR_ADDED_RECIPE,
 } from '../actions/types';
 
 const initialState = {
@@ -15,7 +16,10 @@ const initialState = {
   recipe: null,
   loading: true,
   newRecipeAdded: false,
-  error: {}
+  hasMore: true,
+  date: null,
+  page: 0,
+  error: {},
 };
 
 export default (state = initialState, action) => {
@@ -26,7 +30,16 @@ export default (state = initialState, action) => {
         ...state,
         recipes: [payload, ...state.recipes],
         loading: false,
-        newRecipeAdded: true
+        newRecipeAdded: true,
+      };
+    case LOAD_PAGE:
+      return {
+        ...state,
+        recipes: state.recipes.concat(payload.recipes),
+        hasMore: payload.recipes.length > 0 ? true : false,
+        loading: false,
+        date: payload.date,
+        page: payload.page,
       };
     case GET_RECIPES:
       return {
@@ -37,29 +50,38 @@ export default (state = initialState, action) => {
     case UPDATE_RATING:
       return {
         ...state,
-        recipes: state.recipes
-          .map(recipe => recipe.id === payload.recipeId ? {
-            ...recipe,
-            likes: payload.likes,
-            dislikes: payload.dislikes
-          } : recipe
-          ),
-        recipe: state.recipe !== null && state.recipe.id === payload.recipeId ? { ...state.recipe, likes: payload.likes, dislikes: payload.dislikes } : state.recipe
+        recipes: state.recipes.map((recipe) =>
+          recipe.id === payload.recipeId
+            ? {
+                ...recipe,
+                likes: payload.likes,
+                dislikes: payload.dislikes,
+              }
+            : recipe
+        ),
+        recipe:
+          state.recipe !== null && state.recipe.id === payload.recipeId
+            ? {
+                ...state.recipe,
+                likes: payload.likes,
+                dislikes: payload.dislikes,
+              }
+            : state.recipe,
       };
     case GET_RECIPE:
       return {
         ...state,
         recipe: payload,
-        loading: false
+        loading: false,
       };
     case ADD_COMMENT:
       return {
         ...state,
         recipe: {
           ...state.recipe,
-          comments: payload
+          comments: payload,
         },
-        loading: false
+        loading: false,
       };
     case RECIPE_ERROR:
       return {
@@ -70,10 +92,10 @@ export default (state = initialState, action) => {
     case CLEAR_ADDED_RECIPE:
       return {
         ...state,
-        newRecipeAdded: false
+        newRecipeAdded: false,
       };
 
     default:
       return state;
   }
-}
+};

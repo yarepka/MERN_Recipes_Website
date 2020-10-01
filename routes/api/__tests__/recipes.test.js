@@ -18,7 +18,7 @@ async function createRecipe(xAuthToken) {
     _id: mongoose.Types.ObjectId().toHexString(),
     title: 'Fry Potatoes',
     description: 'Tasy fry potatoes with butter and milk',
-    ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
+    ingredients: 'Potatoes\nButter\nMilkSaltPepper',
     directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
     prepTime: 20,
     cookTime: 60,
@@ -26,7 +26,7 @@ async function createRecipe(xAuthToken) {
     likes: [],
     dislikes: [],
     comments: [],
-    user: user.id
+    user: user.id,
   };
 
   const recipeResponse = await request(app)
@@ -48,7 +48,7 @@ it('unauthorized user trying to create new recipe', async () => {
     _id: mongoose.Types.ObjectId().toHexString(),
     title: 'Fry Potatoes',
     description: 'Tasy fry potatoes with butter and milk',
-    ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
+    ingredients: 'Potatoes\nButter\nMilkSaltPepper',
     directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
     prepTime: 20,
     cookTime: 60,
@@ -56,7 +56,7 @@ it('unauthorized user trying to create new recipe', async () => {
     likes: [],
     dislikes: [],
     comments: [],
-    user: mongoose.Types.ObjectId().toHexString()
+    user: mongoose.Types.ObjectId().toHexString(),
   };
 
   const recipeResponse = await request(app)
@@ -98,8 +98,7 @@ it('authorized user creates 5 recipies and then trying to fetch them', async () 
   }
 
   // Get All Recipies
-  const recipesResponse = await request(app)
-    .get('/api/recipes/');
+  const recipesResponse = await request(app).get('/api/recipes/');
 
   expect(recipesResponse.status).toEqual(200);
 
@@ -108,14 +107,14 @@ it('authorized user creates 5 recipies and then trying to fetch them', async () 
   expect(recipies.length).toEqual(5);
 });
 
-it('authorized user trying to create recipe specifying \'numberOfServings\' property with Not A Number', async () => {
+it("authorized user trying to create recipe specifying 'numberOfServings' property with Not A Number", async () => {
   const xAuthToken = await global.signin();
   // Create recipe
   const newRecipe = {
     _id: mongoose.Types.ObjectId().toHexString(),
     title: 'Fry Potatoes',
     description: 'Tasy fry potatoes with butter and milk',
-    ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
+    ingredients: 'Potatoes\nButter\nMilkSaltPepper',
     directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
     prepTime: 20,
     cookTime: 60,
@@ -123,7 +122,7 @@ it('authorized user trying to create recipe specifying \'numberOfServings\' prop
     likes: [],
     dislikes: [],
     comments: [],
-    user: mongoose.Types.ObjectId().toHexString()
+    user: mongoose.Types.ObjectId().toHexString(),
   };
 
   const recipeResponse = await request(app)
@@ -142,7 +141,7 @@ it('authorized user trying to create recipe by specifying prepTime as a negative
     _id: mongoose.Types.ObjectId().toHexString(),
     title: 'Fry Potatoes',
     description: 'Tasy fry potatoes with butter and milk',
-    ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
+    ingredients: 'Potatoes\nButter\nMilkSaltPepper',
     directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
     prepTime: -1,
     cookTime: 60,
@@ -150,7 +149,7 @@ it('authorized user trying to create recipe by specifying prepTime as a negative
     likes: [],
     dislikes: [],
     comments: [],
-    user: mongoose.Types.ObjectId().toHexString()
+    user: mongoose.Types.ObjectId().toHexString(),
   };
 
   const recipeResponse = await request(app)
@@ -169,7 +168,7 @@ it('authorized user trying to create recipe by specifying prepTime as a value wh
     _id: mongoose.Types.ObjectId().toHexString(),
     title: 'Fry Potatoes',
     description: 'Tasy fry potatoes with butter and milk',
-    ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
+    ingredients: 'Potatoes\nButter\nMilkSaltPepper',
     directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
     prepTime: 0,
     cookTime: 60,
@@ -177,7 +176,7 @@ it('authorized user trying to create recipe by specifying prepTime as a value wh
     likes: [],
     dislikes: [],
     comments: [],
-    user: mongoose.Types.ObjectId().toHexString()
+    user: mongoose.Types.ObjectId().toHexString(),
   };
 
   const recipeResponse = await request(app)
@@ -196,7 +195,7 @@ it('authorized user trying to create recipe by specifying cookTime as a 0 value'
     _id: mongoose.Types.ObjectId().toHexString(),
     title: 'Fry Potatoes',
     description: 'Tasy fry potatoes with butter and milk',
-    ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
+    ingredients: 'Potatoes\nButter\nMilkSaltPepper',
     directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
     prepTime: 5,
     cookTime: 0,
@@ -204,7 +203,7 @@ it('authorized user trying to create recipe by specifying cookTime as a 0 value'
     likes: [],
     dislikes: [],
     comments: [],
-    user: mongoose.Types.ObjectId().toHexString()
+    user: mongoose.Types.ObjectId().toHexString(),
   };
 
   const recipeResponse = await request(app)
@@ -223,7 +222,7 @@ it('authorized user trying to create recipe by specifying cookTime as a value wh
     _id: mongoose.Types.ObjectId().toHexString(),
     title: 'Fry Potatoes',
     description: 'Tasy fry potatoes with butter and milk',
-    ingredients: 'Potatoes\nButter\nMilk\Salt\Pepper',
+    ingredients: 'Potatoes\nButter\nMilkSaltPepper',
     directions: 'Cook Potatoes\nPut Butter & Milk\nAdd sald & pepper',
     prepTime: 0,
     cookTime: 5,
@@ -231,7 +230,7 @@ it('authorized user trying to create recipe by specifying cookTime as a value wh
     likes: [],
     dislikes: [],
     comments: [],
-    user: mongoose.Types.ObjectId().toHexString()
+    user: mongoose.Types.ObjectId().toHexString(),
   };
 
   const recipeResponse = await request(app)
@@ -263,7 +262,7 @@ it('authorized user trying to create recipe by specifying ingredients and direct
     likes: [],
     dislikes: [],
     comments: [],
-    user: mongoose.Types.ObjectId().toHexString()
+    user: mongoose.Types.ObjectId().toHexString(),
   };
 
   let recipeResponse = await request(app)
@@ -284,6 +283,37 @@ it('authorized user trying to create recipe by specifying ingredients and direct
   expect(recipeResponse.body.directions).toEqual(expectedDirArr);
 });
 
+it('authorized/unauthorized user trying to get 5 pages, each page 1 recipe', async () => {
+  // Create user
+  const xAuthToken = await global.signin();
+
+  // Create 5 recipes
+  for (let i = 0; i < 5; i++) {
+    await createRecipe(xAuthToken);
+  }
+
+  const dateInMilliseconds = new Date().getTime();
+  const recipesPerPage = 1;
+
+  // Fetch 5 pages
+  for (let i = 1; i <= 5; i++) {
+    const res = await request(app).get(
+      `/api/recipes/loadPage?page=${i}&date=${dateInMilliseconds}&perPage=${recipesPerPage}`
+    );
+
+    expect(res.status).toEqual(200);
+    expect(res.body.length).toEqual(1);
+  }
+
+  // Fetching 6th page, should have 0
+  const res = await request(app).get(
+    `/api/recipes/loadPage?page=${6}&date=${dateInMilliseconds}&perPage=${recipesPerPage}`
+  );
+
+  expect(res.status).toEqual(200);
+  expect(res.body).toEqual([]);
+  expect(res.body.length).toEqual(0);
+});
 
 it('authorized/unauthorized user trying to get recipe by id', async () => {
   // Create user
@@ -322,7 +352,7 @@ it('user trying to delete recipe without being logged in', async () => {
     .send({});
 
   expect(recipeResponse.status).toEqual(401);
-})
+});
 
 it('user trying to delete recipe which does not exists', async () => {
   // Create user
@@ -674,7 +704,11 @@ it('authorized user trying to delete comment(doest not exist)', async () => {
 
   // Delete comment
   const recipeResponse = await request(app)
-    .delete(`/api/recipes/comment/${recipe.id}/${mongoose.Types.ObjectId().toHexString()}`)
+    .delete(
+      `/api/recipes/comment/${
+        recipe.id
+      }/${mongoose.Types.ObjectId().toHexString()}`
+    )
     .set('x-auth-token', xAuthToken)
     .send({});
 
