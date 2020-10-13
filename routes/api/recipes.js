@@ -238,6 +238,7 @@ router.put('/like/:id', auth, async (req, res) => {
       recipe.likes.filter((like) => like.user.toString() === req.user.id)
         .length > 0
     ) {
+      console.log('Recipe was already liked by this user');
       return res
         .status(400)
         .json({ errors: [{ msg: 'Recipe already liked' }] });
@@ -253,7 +254,7 @@ router.put('/like/:id', auth, async (req, res) => {
     }
 
     // If recipe was Disliked
-    if (!dislikeIndex) {
+    if (dislikeIndex || dislikeIndex === 0) {
       // Remove disliked
       recipe.dislikes.splice(dislikeIndex, 1);
     }
@@ -294,6 +295,7 @@ router.put('/dislike/:id', auth, async (req, res) => {
       recipe.dislikes.filter((like) => like.user.toString() === req.user.id)
         .length > 0
     ) {
+      console.log('Recipe was already DISliked by this user');
       return res.status(400).json({ msg: 'Recipe already disliked' });
     }
 
@@ -307,7 +309,7 @@ router.put('/dislike/:id', auth, async (req, res) => {
     }
 
     // If recipe was Liked
-    if (!likeIndex) {
+    if (likeIndex || likeIndex === 0) {
       // Remove disliked
       recipe.likes.splice(likeIndex, 1);
     }

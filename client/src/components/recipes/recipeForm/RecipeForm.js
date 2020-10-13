@@ -1,20 +1,25 @@
 import React, { Fragment, useState, useEffect, useCallback } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { addRecipe, clearAddedRecipe } from '../../../redux/actions/recipe';
-import { removeAllAlerts } from '../../../redux/actions/alert';
+import { setAlert } from '../../../redux/actions/alertActions';
+import { addRecipe } from '../../../redux/actions/recipeActions';
+import { RECIPE_CREATE_RECIPE_RESET } from '../../../redux/actions/types';
 import FileInput from '../../layout/FileInput';
 import './RecipeForm.css';
 
-const RecipeForm = ({
-  alerts,
-  newRecipeAdded,
-  history,
-  addRecipe,
-  clearAddedRecipe,
-  removeAllAlerts,
-}) => {
-  console.log('[RecipeForm]: rendering');
+const RecipeForm = ({ history }) => {
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  if (!userInfo) history.push('/login?redirect=create-recipe');
+
+  const recipeCreate = useSelector((state) => state.recipeCreate);
+  const { success } = recipeCreate;
+
+  if (success) history.push('/recipes');
+
   const [formData, setFormData] = useState({
     description: '',
     title: '',
@@ -49,26 +54,27 @@ const RecipeForm = ({
 
   const onImageChangeHandler = useCallback(
     (e) => {
-      setImage(e.target.files[0]);
+      const file = e.target.files[0];
+      if (file.type.split('/')[0] === 'image') {
+        setImage(file);
+      } else {
+        setImage('');
+        dispatch(setAlert('You can only use image files', 'danger'));
+      }
     },
     [image]
   );
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    addRecipe({ ...formData, image });
+    dispatch(addRecipe({ ...formData, image }));
   };
 
   useEffect(() => {
-    if (alerts.length > 0) removeAllAlerts();
+    return () => {
+      dispatch({ type: RECIPE_CREATE_RECIPE_RESET });
+    };
   }, []);
-
-  useEffect(() => {
-    if (newRecipeAdded) {
-      clearAddedRecipe();
-      history.push('/recipes');
-    }
-  }, [newRecipeAdded]);
 
   return (
     <Fragment>
@@ -174,11 +180,4 @@ const RecipeForm = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  newRecipeAdded: state.recipe.newRecipeAdded,
-  alerts: state.alert,
-});
-
-export default connect(mapStateToProps, { addRecipe, clearAddedRecipe })(
-  RecipeForm
-);
+export default RecipeForm;

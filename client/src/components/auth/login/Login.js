@@ -1,19 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { login } from '../../../redux/actions/auth';
-import { removeAllAlerts } from '../../../redux/actions/alert';
+import { useDispatch, useSelector } from 'react-redux';
+
+import Spinner from '../../layout/Spinner';
+import { ALERT_RESET } from '../../../redux/actions/types';
+import { login } from '../../../redux/actions/userActions';
 
 import './Login.css';
 
-const Login = ({
-  alerts,
-  login,
-  removeAllAlerts,
-  isAuthenticated,
-  history,
-}) => {
-  console.log('[Login]: rendering');
+const Login = ({ location, history }) => {
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo, loading } = userLogin;
+
+  const redirect = location.search && location.search.split('=')[1];
+
+  if (userInfo) {
+    if (redirect) {
+      history.push(redirect);
+    } else {
+      history.goBack();
+    }
+  }
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,16 +37,14 @@ const Login = ({
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    login({ email, password });
+    dispatch(login({ email, password }));
   };
 
   useEffect(() => {
-    if (alerts.length > 0) removeAllAlerts();
+    return () => {
+      dispatch({ type: ALERT_RESET });
+    };
   }, []);
-
-  useEffect(() => {
-    if (isAuthenticated) history.goBack();
-  }, [isAuthenticated]);
 
   return (
     <div>
@@ -65,23 +72,19 @@ const Login = ({
           />
         </div>
 
-        <input
-          type='submit'
-          value='Login'
-          className='btn btn-primary block-on-mobile'
-        />
+        {loading && <Spinner />}
+
+        <button type='submit' className='btn btn-primary block-on-mobile'>
+          Login
+        </button>
       </form>
 
       <p className='my-1'>
-        Don't have an account? <Link to='/register'>Sign Up</Link>
+        Don't have an account?{' '}
+        <Link to={`/register?redirect=${redirect}`}>Sign Up</Link>
       </p>
     </div>
   );
 };
 
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  alerts: state.alert,
-});
-
-export default connect(mapStateToProps, { login, removeAllAlerts })(Login);
+export default Login;

@@ -1,21 +1,33 @@
 import React, { Fragment, useState, useEffect, useCallback } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import Spinner from '../../layout/Spinner';
+import { register } from '../../../redux/actions/userActions';
+import { setAlert } from '../../../redux/actions/alertActions';
+import { ALERT_RESET, USER_REGISTER_RESET } from '../../../redux/actions/types';
 
 import './Register.css';
-import { setAlert, removeAllAlerts } from '../../../redux/actions/alert';
-import { register } from '../../../redux/actions/auth';
 import FileInput from '../../layout/FileInput';
 
-const Register = ({
-  setAlert,
-  removeAllAlerts,
-  register,
-  isAuthenticated,
-  history,
-  alerts,
-}) => {
-  console.log('[Register]: rendering');
+const Register = ({ history, location }) => {
+  const dispatch = useDispatch();
+
+  const redirect = location.search ? location.search.split('=')[1] : '/';
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const userRegister = useSelector((state) => state.userRegister);
+  const { loading } = userRegister;
+
+  if (userInfo) {
+    if (redirect) {
+      history.push(redirect);
+    } else {
+      history.goBack();
+    }
+  }
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -41,7 +53,13 @@ const Register = ({
 
   const onImageChangeHandler = useCallback(
     (e) => {
-      setImage(e.target.files[0]);
+      const file = e.target.files[0];
+      if (file.type.split('/')[0] === 'image') {
+        setImage(file);
+      } else {
+        setImage('');
+        dispatch(setAlert('You can only use image files', 'danger'));
+      }
     },
     [image]
   );
@@ -49,26 +67,28 @@ const Register = ({
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     if (!password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/)) {
-      setAlert('Invalid password', 'danger');
+      dispatch(setAlert('Invalid password', 'danger'));
     } else if (password !== confirmPassword) {
-      setAlert('Passwords do not match', 'danger');
+      dispatch(setAlert('Passwords do not match', 'danger'));
     } else {
-      register({
-        name: name,
-        email: email,
-        password: password,
-        image: image,
-      });
+      console.log(name, email, password, image);
+      dispatch(
+        register({
+          name: name,
+          email: email,
+          password: password,
+          image: image,
+        })
+      );
     }
   };
 
   useEffect(() => {
-    if (alerts.length > 0) removeAllAlerts();
+    return () => {
+      dispatch({ type: ALERT_RESET });
+      dispatch({ type: USER_REGISTER_RESET });
+    };
   }, []);
-
-  useEffect(() => {
-    if (isAuthenticated) history.goBack();
-  }, [isAuthenticated]);
 
   return (
     <Fragment>
@@ -134,26 +154,18 @@ const Register = ({
           </div>
         </div>
 
-        <input
-          type='submit'
-          value='Register'
-          className='btn btn-primary block-on-mobile'
-        />
+        {loading && <Spinner />}
+
+        <button type='submit' className='btn btn-primary block-on-mobile'>
+          Register
+        </button>
       </form>
       <p className='my-1'>
-        Already have an account? <Link to='/login'>Sign In</Link>
+        Already have an account?{' '}
+        <Link to={`/login?redirect=${redirect}`}>Sign In</Link>
       </p>
     </Fragment>
   );
 };
 
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  alerts: state.alert,
-});
-
-export default connect(mapStateToProps, {
-  setAlert,
-  removeAllAlerts,
-  register,
-})(Register);
+export default Register;

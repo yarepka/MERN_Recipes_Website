@@ -39,6 +39,14 @@ textarea {
   resize: vertical;
 }
 
+button:disabled {
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  opacity: 1 !important;
+}
+
 /* Utility Classes */
 .container {
   max-width: var(--max-width);
@@ -129,11 +137,13 @@ textarea {
   margin: 1rem 0;
 }
 
-input, textarea {
+input,
+textarea {
   border-radius: 2px;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   outline: 1px solid var(--success-color);
 }
 
@@ -147,13 +157,16 @@ input:focus, textarea:focus {
   color: #333;
 }
 
-.form-group label, .form-group input, .form-group textarea {
+.form-group label,
+.form-group input,
+.form-group textarea {
   display: block;
   width: 100%;
   font-weight: 600;
 }
 
-.form-group input, .form-group textarea {
+.form-group input,
+.form-group textarea {
   padding: 0.4rem;
   font-size: 1.2rem;
   border: 1px solid #ccc;
@@ -162,8 +175,6 @@ input:focus, textarea:focus {
 #file-upload {
   display: none;
 }
-
-
 
 .form-group-flex {
   display: flex;
@@ -243,14 +254,14 @@ input:focus, textarea:focus {
   display: none !important;
 }
 
-@media(max-width: 1200px) {
+@media (max-width: 1200px) {
   .inputs {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media(max-width: 700px) {
+@media (max-width: 700px) {
   .container {
     margin-top: 8rem;
   }
@@ -297,7 +308,7 @@ input:focus, textarea:focus {
   }
 }
 
-@media(max-width: 500px) {
+@media (max-width: 500px) {
   .container {
     padding: 1rem;
   }
@@ -327,10 +338,9 @@ input:focus, textarea:focus {
   .hide-on-mobile {
     display: none !important;
   }
-
 }
 
-@media(max-width: 300px) {
+@media (max-width: 300px) {
   .container {
     margin-top: 14rem;
   }
@@ -355,4 +365,3 @@ input:focus, textarea:focus {
     font-size: 0.7rem;
   }
 }
-

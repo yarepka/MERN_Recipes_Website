@@ -1,30 +1,42 @@
 import React, { Fragment, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { RECIPE_LOAD_SINGLE_RESET } from '../../redux/actions/types';
+import {
+  addLike,
+  addDislike,
+  getRecipe,
+} from '../../redux/actions/recipeActions';
 import Spinner from '../layout/Spinner';
 import CommentForm from './CommentForm';
 import Comments from './Comments';
-import { getRecipe, addLike, addDislike } from '../../redux/actions/recipe';
-import { removeAllAlerts } from '../../redux/actions/alert';
 import './Recipe.css';
 
-const Recipe = ({
-  removeAllAlerts,
-  getRecipe,
-  addLike,
-  addDislike,
-  alerts,
-  recipe: { recipe, loading },
-  match,
-}) => {
-  console.log('[Recipe.js]: rendering');
+const Recipe = ({ match }) => {
+  const recipeId = match.params.id;
+  const dispatch = useDispatch();
+  const recipeSingle = useSelector((state) => state.recipeSingle);
+  const { recipe, loading } = recipeSingle;
+
+  const onLikeHandler = (recipeId) => {
+    dispatch(addLike(recipeId));
+  };
+
+  const onDislikeHandler = (recipeId) => {
+    dispatch(addDislike(recipeId));
+  };
 
   useEffect(() => {
-    if (alerts.length > 0) removeAllAlerts();
-    getRecipe(match.params.id);
+    dispatch(getRecipe(recipeId));
   }, []);
 
-  return loading || recipe === null ? (
+  useEffect(() => {
+    return () => {
+      dispatch({ type: RECIPE_LOAD_SINGLE_RESET });
+    };
+  }, []);
+
+  return loading ? (
     <Spinner />
   ) : (
     <Fragment>
@@ -65,7 +77,7 @@ const Recipe = ({
           <div className='single-recipe-rating'>
             <button
               className='btn btn-transparent'
-              onClick={(e) => addLike(recipe.id)}
+              onClick={() => onLikeHandler(recipe.id)}
             >
               <i className='fas fa-thumbs-up'></i>
               <span className='single-comment-likes'>
@@ -75,7 +87,7 @@ const Recipe = ({
 
             <button
               className='btn btn-transparent'
-              onClick={(e) => addDislike(recipe.id)}
+              onClick={() => onDislikeHandler(recipe.id)}
             >
               <i className='fas fa-thumbs-down'></i>
               <span className='single-comment-likes'>
@@ -131,14 +143,4 @@ const Recipe = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  recipe: state.recipe,
-  alerts: state.alert,
-});
-
-export default connect(mapStateToProps, {
-  getRecipe,
-  addLike,
-  addDislike,
-  removeAllAlerts,
-})(Recipe);
+export default Recipe;

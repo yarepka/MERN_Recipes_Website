@@ -8,7 +8,8 @@
     "server": "nodemon index.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "jest --no-deprecation --watchAll --no-cache"
+    "test": "jest --no-deprecation --watchAll --no-cache",
+    "data:import": "node seeder"
   },
   "jest": {
     "testEnvironment": "node",

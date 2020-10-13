@@ -14,6 +14,7 @@
   align-self: center;
   background-repeat: no-repeat;
   background-position: center;
+  cursor: pointer;
 }
 
 .recipe-info {
@@ -40,6 +41,10 @@
   text-align: justify;
   line-height: 2rem;
   font-size: 1.1rem;
+}
+
+.recipe .head h2 {
+  cursor: pointer;
 }
 
 .recipe-portions {

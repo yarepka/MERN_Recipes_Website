@@ -315,6 +315,41 @@ it('authorized/unauthorized user trying to get 5 pages, each page 1 recipe', asy
   expect(res.body.length).toEqual(0);
 });
 
+it('authorized/unauthorized user trying to get 5 pages, each page 1 recipe date test', async () => {
+  // Create user
+  const xAuthToken = await global.signin();
+
+  // Create 5 recipes
+  for (let i = 0; i < 5; i++) {
+    await createRecipe(xAuthToken);
+  }
+
+  const dateInMilliseconds = new Date().getTime();
+  const recipesPerPage = 1;
+
+  // Create one more recipe
+  await createRecipe(xAuthToken);
+
+  // Fetch 5 pages
+  for (let i = 1; i <= 5; i++) {
+    const res = await request(app).get(
+      `/api/recipes/loadPage?page=${i}&date=${dateInMilliseconds}&perPage=${recipesPerPage}`
+    );
+
+    expect(res.status).toEqual(200);
+    expect(res.body.length).toEqual(1);
+  }
+
+  // Fetching 6th page, should have 0
+  const res = await request(app).get(
+    `/api/recipes/loadPage?page=${6}&date=${dateInMilliseconds}&perPage=${recipesPerPage}`
+  );
+
+  expect(res.status).toEqual(200);
+  expect(res.body).toEqual([]);
+  expect(res.body.length).toEqual(0);
+});
+
 it('authorized/unauthorized user trying to get recipe by id', async () => {
   // Create user
   const xAuthToken = await global.signin();

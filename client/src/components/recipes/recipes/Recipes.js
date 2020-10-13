@@ -1,30 +1,39 @@
 import React, { Fragment, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 
+import { RECIPE_LOAD_PAGE_RESET } from '../../../redux/actions/types';
+import { loadPage } from '../../../redux/actions/recipeActions';
 import RecipeItem from '../recipeItem/RecipeItem';
 import Spinner from '../../layout/Spinner';
-import { loadPage } from '../../../redux/actions/recipe';
-import { removeAllAlerts } from '../../../redux/actions/alert';
 
-const Recipes = ({
-  loadPage,
-  removeAllAlerts,
-  recipe: { recipes, loading, hasMore, date, page },
-}) => {
-  console.log('[Recipes]: rendering');
+const Recipes = ({}) => {
+  const dispatch = useDispatch();
 
-  const loadRecipes = () => {
-    loadPage(++page, date !== null ? date : new Date().getTime());
-  };
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const recipeLoadPage = useSelector((state) => state.recipeLoadPage);
+  const { hasMore, recipes, loading, loadingPage } = recipeLoadPage;
 
   useEffect(() => {
-    removeAllAlerts();
     loadRecipes();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      dispatch({ type: RECIPE_LOAD_PAGE_RESET });
+    };
+  }, []);
+
+  const loadRecipes = () => {
+    if (!loadingPage) {
+      dispatch(loadPage());
+    }
+  };
+
   const recipeItems = recipes.map((recipe) => {
-    return <RecipeItem recipe={recipe} key={recipe.id} />;
+    return <RecipeItem recipe={recipe} key={recipe.id} disabled={!userInfo} />;
   });
 
   return (
@@ -48,8 +57,4 @@ const Recipes = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  recipe: state.recipe,
-});
-
-export default connect(mapStateToProps, { loadPage, removeAllAlerts })(Recipes);
+export default Recipes;
