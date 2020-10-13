@@ -16,6 +16,10 @@ const Recipe = ({ match }) => {
   const recipeId = match.params.id;
   const dispatch = useDispatch();
   const recipeSingle = useSelector((state) => state.recipeSingle);
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   const { recipe, loading } = recipeSingle;
 
   const onLikeHandler = (recipeId) => {
@@ -78,6 +82,7 @@ const Recipe = ({ match }) => {
             <button
               className='btn btn-transparent'
               onClick={() => onLikeHandler(recipe.id)}
+              disabled={!userInfo}
             >
               <i className='fas fa-thumbs-up'></i>
               <span className='single-comment-likes'>
@@ -88,6 +93,7 @@ const Recipe = ({ match }) => {
             <button
               className='btn btn-transparent'
               onClick={() => onDislikeHandler(recipe.id)}
+              disabled={!userInfo}
             >
               <i className='fas fa-thumbs-down'></i>
               <span className='single-comment-likes'>
@@ -138,7 +144,7 @@ const Recipe = ({ match }) => {
       </div>
 
       {recipe.comments.length > 0 && <Comments comments={recipe.comments} />}
-      <CommentForm recipeId={recipe.id} />
+      {userInfo && <CommentForm recipeId={recipe.id} userInfo={userInfo} />}
     </Fragment>
   );
 };
