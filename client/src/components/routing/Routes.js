@@ -7,6 +7,7 @@ import RecipeForm from '../recipes/recipeForm/RecipeForm';
 import Recipes from '../recipes/recipes/Recipes';
 import Recipe from '../recipe/Recipe';
 import Alert from '../layout/Alert';
+import NotFound from '../layout/NotFound';
 
 const Routes = () => {
   return (
@@ -18,6 +19,7 @@ const Routes = () => {
         <Route exact path='/recipes' component={Recipes} />
         <Route exact path='/recipes/:id' component={Recipe} />
         <Route exact path='/create-recipe' component={RecipeForm} />
+        <Route path='/' component={NotFound} />
       </Switch>
     </section>
   );

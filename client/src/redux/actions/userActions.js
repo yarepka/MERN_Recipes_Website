@@ -84,8 +84,6 @@ export const login = (fields) => {
       const token = res.data.token;
       config.headers['x-auth-token'] = token;
 
-      console.log(config);
-
       res = await axios.get('/api/auth', config);
 
       const userInfo = {

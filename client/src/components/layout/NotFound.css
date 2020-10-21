@@ -1,0 +1,19 @@
+.not-found {
+  width: 100%;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.not-found h1 {
+  color: var(--success-color);
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.not-found p {
+  color: var(--dark-color);
+  font-size: 3rem;
+}

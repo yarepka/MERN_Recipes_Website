@@ -210,8 +210,6 @@ router.delete('/:id', auth, async (req, res) => {
 
     return res.status(204).json({ msg: 'Recipe removed' });
   } catch (err) {
-    console.log(err.message);
-
     if (err.kind === 'ObjectId') {
       return res.status(404).json({ errors: [{ msg: 'Recipe not found' }] });
     }
@@ -238,7 +236,6 @@ router.put('/like/:id', auth, async (req, res) => {
       recipe.likes.filter((like) => like.user.toString() === req.user.id)
         .length > 0
     ) {
-      console.log('Recipe was already liked by this user');
       return res
         .status(400)
         .json({ errors: [{ msg: 'Recipe already liked' }] });
@@ -267,8 +264,6 @@ router.put('/like/:id', auth, async (req, res) => {
 
     return res.status(200).json(recipe.likes);
   } catch (err) {
-    console.log(err.message);
-
     if (err.kind === 'ObjectId') {
       return res.status(404).json({ errors: [{ msg: 'Recipe not found' }] });
     }
@@ -295,7 +290,6 @@ router.put('/dislike/:id', auth, async (req, res) => {
       recipe.dislikes.filter((like) => like.user.toString() === req.user.id)
         .length > 0
     ) {
-      console.log('Recipe was already DISliked by this user');
       return res.status(400).json({ msg: 'Recipe already disliked' });
     }
 
@@ -322,8 +316,6 @@ router.put('/dislike/:id', auth, async (req, res) => {
 
     return res.json(recipe.dislikes);
   } catch (err) {
-    console.log(err.message);
-
     if (err.kind === 'ObjectId') {
       return res.status(404).json({ errors: [{ msg: 'Recipe not found' }] });
     }
@@ -363,8 +355,6 @@ router.post(
 
       res.status(201).json(recipe.comments);
     } catch (err) {
-      console.log(err.message);
-
       if (err.kind === 'ObjectId') {
         return res.status(404).json({ errors: [{ msg: 'Recipe not found' }] });
       }
@@ -414,8 +404,6 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
 
     return res.status(204).json(recipe.comments);
   } catch (err) {
-    console.log(err.message);
-
     if (err.kind === 'ObjectId') {
       return res.status(404).json({ errors: [{ msg: 'Recipe not found' }] });
     }

@@ -71,7 +71,6 @@ const Register = ({ history, location }) => {
     } else if (password !== confirmPassword) {
       dispatch(setAlert('Passwords do not match', 'danger'));
     } else {
-      console.log(name, email, password, image);
       dispatch(
         register({
           name: name,

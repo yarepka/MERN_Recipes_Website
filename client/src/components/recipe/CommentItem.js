@@ -4,7 +4,6 @@ import Moment from 'react-moment';
 import './CommentItem.css';
 
 const CommentItem = ({ comment }) => {
-  console.log('[CommentItem.js]: rendering');
 
   return (
     <div className="comment">
