@@ -17,3 +17,37 @@
   color: var(--dark-color);
   font-size: 3rem;
 }
+
+@media (max-width: 800px) {
+  .not-found h1 {
+    font-size: 3rem;
+  }
+
+  .not-found p {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .not-found h1 {
+    font-size: 2rem;
+    letter-spacing: 0px;
+    text-align: center;
+  }
+
+  .not-found p {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 300px) {
+  .not-found h1 {
+    font-size: 1.5rem;
+    letter-spacing: 0px;
+  }
+
+  .not-found p {
+    font-size: 1.5rem;
+  }
+}
