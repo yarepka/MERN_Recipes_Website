@@ -16,6 +16,9 @@ const Recipes = ({}) => {
   const recipeLoadPage = useSelector((state) => state.recipeLoadPage);
   const { hasMore, recipes, loading, loadingPage } = recipeLoadPage;
 
+  const recipeCreate = useSelector((state) => state.recipeCreate);
+  const { success } = recipeCreate;
+
   useEffect(() => {
     loadRecipes();
   }, []);
@@ -27,7 +30,7 @@ const Recipes = ({}) => {
   }, []);
 
   const loadRecipes = () => {
-    if (!loadingPage) {
+    if (!loadingPage && !success) {
       dispatch(loadPage());
     }
   };
