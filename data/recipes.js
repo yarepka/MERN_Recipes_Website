@@ -305,7 +305,7 @@ const recipes = [
       'Preheat the oven to 425 degrees F (220 degrees C).',
       'Place a small loaf pan of warm water on a lower rack to humidify the oven.',
       'Slash a long slit in the top of the loaf with a sharp knife or razor. Place the baking sheet on the rack above the pan of warm water in the oven. Bake for 35 minutes, until the loaf is golden brown.',
-      'cl',
+      'Transfer to a cooling rack. Let cool completely before slicing and serving.',
     ],
     prepTime: 10,
     cookTime: 35,
