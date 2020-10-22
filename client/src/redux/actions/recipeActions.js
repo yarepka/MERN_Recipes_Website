@@ -25,7 +25,7 @@ export const loadPage = () => {
       } = getState();
 
       const nextPage = page + 1;
-      const currentDate = date !== null ? date : new Date().getTime();
+      const currentDate = date !== null ? date : new Date().getTime() + 1000;
 
       const res = await axios.get(
         `/api/recipes/loadPage?page=${nextPage}&date=${currentDate}`
