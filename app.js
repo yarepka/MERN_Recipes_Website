@@ -2,11 +2,14 @@ const express = require('express');
 
 const app = express();
 const fileUpload = require('express-fileupload');
+const path = require('path');
 
 app.use(fileUpload());
 
 // body parser
 app.use(express.json({ extended: false }));
+
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 // Define Routes
 app.use('/api/users', require('./routes/api/users'));

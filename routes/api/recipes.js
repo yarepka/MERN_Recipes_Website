@@ -94,15 +94,7 @@ router.post(
           new Date().getMilliseconds()
         }${path.extname(req.files.file.name)}`;
 
-        await file.mv(
-          path.join(
-            path.resolve(process.mainModule.filename, '../'),
-            'client',
-            'public',
-            'uploads',
-            imagePath
-          )
-        );
+        await file.mv(path.join(path.resolve(), 'uploads', imagePath));
       }
 
       newRecipe.imagePath = imagePath;
