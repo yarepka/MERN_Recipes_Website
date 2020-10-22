@@ -37,6 +37,7 @@ const Recipe = ({ match }) => {
   useEffect(() => {
     return () => {
       dispatch({ type: RECIPE_LOAD_SINGLE_RESET });
+      dispatch({ type: ALERT_RESET });
     };
   }, []);
 
