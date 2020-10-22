@@ -1,7 +1,10 @@
 import React, { Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { RECIPE_LOAD_SINGLE_RESET } from '../../redux/actions/types';
+import {
+  RECIPE_LOAD_SINGLE_RESET,
+  ALERT_RESET,
+} from '../../redux/actions/types';
 import {
   addLike,
   addDislike,
